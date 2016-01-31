@@ -1,0 +1,19 @@
+build_proj_aliases() {
+  #dirs="$(\ls -d ~/p/??{?,})"
+  dirs="$(\ls -d ~/p/??)" 
+  for d in $dirs; do
+    n="$(basename $d)" > /dev/null 2>&1
+    eval "alias do-$n='export PRJ="$n";export PRJROOTDIR='$d'/"\""\$(history | tail -n1 | awk '\''{print \$3}'\'' | xargs echo)"\""; cdp \$PRJROOTDIR'" > /dev/null 2>&1
+  done
+}
+build_proj_aliases
+
+cdp() {
+  if [ ! -z "$1" ] ; then
+    #export PRJROOTDIR="$(ruby -e "puts File.absolute_path('"$1"')")"
+    export PRJROOTDIR=$(perl -e "use File::Spec; printf "%s\n", File::Spec->rel2abs('$1')")
+    echo "Changing project root to $PRJROOTDIR"
+    label "$(echo $PRJ|tr "[:lower:]" "[:upper:]"):$(basename $PRJROOTDIR)"
+  fi
+  cd $PRJROOTDIR
+}

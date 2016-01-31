@@ -1,0 +1,32 @@
+[user]
+	name = Dennis Bell
+	email = dennis.j.bell@gmail.com
+
+[alias]
+  co = checkout
+  ci = commit
+  st = status
+  br = branch -vv
+  history = log --pretty=oneline --abbrev-commit --graph --decorate
+  wip = log --branches --not --remotes --simplify-by-decoration --decorate --oneline
+  type = cat-file -t
+  dump = cat-file -p
+  hist = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr by %an)%Creset' --abbrev-commit --date=relative 
+	oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | sed -ne \"s/^ //p\" | head -1' -
+	bd = !sh -c \"git diff `git oldest-ancestor`..\"
+	bl = !sh -c \"git hist `git oldest-ancestor`^..\"
+  diverged = !sh -c \"git log `git oldest-ancestor` --decorate --abbrev-commit -1\"
+[mergetool]
+	keepBackup = true
+[core]
+	excludesfile = /Users/dbell/.gitignore
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[color]
+	ui = auto
+[push]
+  default = current

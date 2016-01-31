@@ -1,0 +1,108 @@
+export CPPFLAGS=-I/opt/X11/include
+
+# PostgreSQL
+if [ -d "/usr/local/postgresql/bin" ] ; then
+  export PGUSER=dbell
+  export PGDATA=/var/db/postgresql/active/data
+  export PGLOG=/var/log/postgresql/server.log
+  export PATH=/usr/local/postgresql/bin:$PATH
+fi
+
+# Editor
+export EDITOR=vim
+alias vi='\vim'
+alias vim='mvim -v'
+alias gvim='\mvim -p'
+alias :e="$EDITOR"
+
+getip() {
+  curl http://automation.whatismyip.com/n09230945.asp
+  echo ""
+}
+
+# Node.js
+if [ -d /usr/local/lib/node_modules ] ; then
+  export NODE_PATH=/usr/local/lib/node_modules
+fi
+
+# Navigation
+mcd() {
+  mkdir -p "$1"
+  cd "$1"
+}
+alias ls="\ls -aFG"
+alias la="\ls -laFG"
+alias lsf="ls -lFAGht"
+alias lsc="ls -lhG"
+alias lsa='ls -lhA'
+alias lst='ls -lht'
+alias lsa="ls -lAht"
+alias ..="cd .."
+alias cdd="cd -"
+
+# Utility
+alias screen="screen -U"
+alias reload="source ~/.bashrc"
+
+# Search
+alias fid='find . -regex '\''.*'\'' | xargs grep'
+
+# Archiving
+alias zipr="zip -r"
+alias tgzc="tar -zcvf"
+alias tgzx="tar -zxvf"
+
+# -----------------------------------------------------------------------------
+# Git Aliases
+# -----------------------------------------------------------------------------
+export PATH="$HOME/bin/git-utils:$PATH"
+
+# Git Add
+alias ga="git add"
+alias gaa="git add ."
+
+# Git Commit
+alias gcam="git commit -a -m"
+
+# Git Checkout
+alias gcom="git checkout master"
+alias gco="git checkout"
+alias gcob="git checkout master && git pull master && git checkout -b"
+
+# Git Rebase
+alias grim="git rebase -i origin/master"
+
+# Git pull
+alias gup="git pull origin master"
+alias gpu="git pull origin master"
+
+# Git Log
+alias gl="git log"
+alias glog="git log"
+
+# Git Status
+alias gs="git status"
+alias gstat="git status"
+
+# Git Diff
+alias gd="git diff -b"
+alias gdiff="git diff"
+
+if [ ! -z "$BASH_VERSION" -a ! -z "$PS1" ] ; then
+  # Git should I push?
+  alias push?="git cherry -v origin/master"
+fi
+
+
+# Git Branch
+alias gb="git branch"
+alias gbc="git branch | grep '* ' | awk ' {print \$2}'"
+alias gbr="git branch -r"
+
+# Git Fetch
+alias gfa="git fetch --all"
+alias grr='diffs="$(git status | grep "both modified:" | sed -e "s/.*both modified: *//")" vim $diffs && git add $diffs && git rebase --continue'
+
+# Use vi mode
+#set -o vi
+

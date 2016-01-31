@@ -1,0 +1,13 @@
+# This should only be run by .bashrc on Mac OS X (darwin*) systems
+export CLICOLOR=1
+export ARCHFLAGS="-arch x86_64"
+
+# Mac-only aliases
+alias preview="open -a Preview.app"
+
+
+# Utility Functions
+netpid() {
+  ps uwwx -p $(lsof -n -i4TCP:$1 | grep LISTEN | awk '{print $2}')
+}
+

@@ -1,0 +1,45 @@
+export PATH="$PATH:$HOME/.rvm/bin"
+if [[ -s /Users/dbell/.rvm/scripts/rvm ]] && [[ $rvm_loaded_flag != 1 ]] ; then source /Users/dbell/.rvm/scripts/rvm ; fi
+[[ -r $rvm_path/scripts/completion ]] && . $rvm_path/scripts/completion
+
+update_update_wrapper () {
+  check="$(cat `which $1` | grep 'source.*\.rvm/gems/\(.*\)/environment')";
+  if [ "$?" = 0 ] ; then
+    location="$(echo $check | sed -e 's#.*source.*"\(.*\)".*#\1#')";
+    gemset="$(echo $check | sed -e 's#.*/.rvm/gems/\(.*\)/environment.*#\1#')";
+    version_str=''
+    if [ "$2" != '-v'] ; then
+      gem=${2:-$1}
+      shift
+    fi
+    if [ "$2" = '-v' ]; then
+      version_str=" -v '$3'";
+      shift;
+      shift;
+      gem=${2:-${gem:-$1}}
+    fi;
+
+    if [[ -s "$location" ]]; then
+      source "$location"
+      exec gem update "'$gem'" $version_str
+    else
+      echo "ERROR: Missing RVM environment file: '$location'" >&2
+      exit 1
+    fi
+  else
+    echo "ERROR: $1 does not seem to be wrapped by rvm" >&2
+    echo 1
+  fi
+}
+
+rvm_to_wrapper() {
+  check="$(cat `which $1` | grep 'source.*\.rvm/gems/\(.*\)/environment')";
+  if [ "$?" = 0 ] ; then
+    gemset="$(echo $check | sed -e 's#.*/.rvm/gems/\(.*\)/environment.*#\1#')";
+    rvm use $gemset
+  else
+    echo "ERROR: $1 does not seem to be wrapped by rvm" >&2
+    echo 1
+  fi
+}
+
