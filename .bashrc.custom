@@ -11,8 +11,6 @@ fi
 # Editor
 export EDITOR=vim
 alias vi='\vim'
-alias vim='mvim -v'
-alias gvim='\mvim -p'
 alias :e="$EDITOR"
 
 getip() {
@@ -67,7 +65,7 @@ alias gcam="git commit -a -m"
 # Git Checkout
 alias gcom="git checkout master"
 alias gco="git checkout"
-alias gcob="git checkout master && git pull master && git checkout -b"
+alias gcob="git checkout master && git pull origin master && git checkout -b"
 
 # Git Rebase
 alias grim="git rebase -i origin/master"

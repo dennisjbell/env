@@ -4,7 +4,8 @@ export ARCHFLAGS="-arch x86_64"
 
 # Mac-only aliases
 alias preview="open -a Preview.app"
-
+alias vim='mvim -v'
+alias gvim='\mvim -p'
 
 # Utility Functions
 netpid() {
