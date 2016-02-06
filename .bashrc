@@ -39,7 +39,7 @@ PROMPT_COMMAND=_bash_history_sync
 # -----------------------------------------------------------------------------
 PSstatus="[\[\e[1;33m\]\!\[\e[0;39m\]/\$(err_code=\$?; if [ \$err_code == 0 ] ; then echo \"\[\e[0;32m\]0\[\e[0;39m\]\" ;else echo \"\[\e[1;31m\]\$err_code\[\e[0;39m\]\"; fi)] \[\e[1;36m\]\u\[\e[1;37m\]@\[\e[0;36m\]\h\[\e[1;37m\] "
 PSgit="\[\e[0;35m\]\$(vcprompt)"
-PSrvm="\[\e[1;30m\]\$(~/.rvm/bin/rvm-prompt)"
+PSrvm="${PSrvm:-}"
 PSprompt="\n\[\e[1;34m\]\w \[\e[1;37m\]∴\[\e[0;39m\] "
 
 type git >/dev/null 2>&1

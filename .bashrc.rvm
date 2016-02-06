@@ -2,6 +2,9 @@ export PATH="$PATH:$HOME/.rvm/bin"
 if [[ -s /Users/dbell/.rvm/scripts/rvm ]] && [[ $rvm_loaded_flag != 1 ]] ; then source /Users/dbell/.rvm/scripts/rvm ; fi
 [[ -r $rvm_path/scripts/completion ]] && . $rvm_path/scripts/completion
 
+# Add rvm to the path
+PSrvm="\[\e[1;30m\]\$(~/.rvm/bin/rvm-prompt)"
+
 update_update_wrapper () {
   check="$(cat `which $1` | grep 'source.*\.rvm/gems/\(.*\)/environment')";
   if [ "$?" = 0 ] ; then
