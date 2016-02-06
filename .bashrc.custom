@@ -33,7 +33,13 @@ goco() {
 
   local match="$(echo $1 | fold -w1 | paste -sd' ' - | sed -e 's/ /.*/g')"
 
-  local dir="$(find ~/code -type d | grep "$match" | sort | head -n 1)"
+  local dir="$(find ~/code -type d | \
+    grep -v '/.git\(/\|$\)' | \
+    grep "$match" | \
+    awk '{ a=$0; gsub(/[^\/]/,"",$0); print length, length(a), a}' |\
+    sort -k1,1n -k2,2n -k3,3d | \
+    cut -d ' ' -f 3- | \
+    head -n1)"
 
   if [[ -n "$dir" ]] ; then
     cd $dir
