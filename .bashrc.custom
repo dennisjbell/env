@@ -28,6 +28,20 @@ mcd() {
   mkdir -p "$1"
   cd "$1"
 }
+
+goco() {
+
+  local match="$(echo $1 | fold -w1 | paste -sd' ' - | sed -e 's/ /.*/g')"
+
+  local dir="$(find ~/code -type d | grep "$match" | sort | head -n 1)"
+
+  if [[ -n "$dir" ]] ; then
+    cd $dir
+  else
+    echo "No match found"
+  fi
+}
+
 alias ls="\ls -aFG"
 alias la="\ls -laFG"
 alias lsf="ls -lFAGht"
