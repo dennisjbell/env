@@ -31,9 +31,18 @@ mcd() {
 
 goco() {
 
+  local base="$HOME/code"
+  if [ ! -d base ] ; then
+    base="/code"
+    if [ ! -d base ] ; then
+      echo "No ~/code or /code directory found"
+      exit 1
+    fi
+  fi
+
   local match="$(echo $1 | fold -w1 | paste -sd' ' - | sed -e 's/ /.*/g')"
 
-  local dir="$(find ~/code -type d | \
+  local dir="$(find $base -type d | \
     grep -v '/.git\(/\|$\)' | \
     grep "$match" | \
     awk '{ a=$0; gsub(/[^\/]/,"",$0); print length, length(a), a}' |\
