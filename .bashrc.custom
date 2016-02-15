@@ -13,6 +13,10 @@ export EDITOR=vim
 alias vi='\vim'
 alias :e="$EDITOR"
 
+removehost() {
+  ssh-keygen -R $(head -$1 ~/.ssh/known_hosts | tail -1 | awk '{print $1}' | sed -e 's/,.*//')
+}
+
 getip() {
   curl http://automation.whatismyip.com/n09230945.asp
   echo ""
