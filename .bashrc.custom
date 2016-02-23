@@ -33,15 +33,25 @@ mcd() {
   cd "$1"
 }
 
-goco() {
-
+__code_base_dir() {
   local base="$HOME/code"
   if [ ! -d $base ] ; then
     base="/code"
     if [ ! -d $base ] ; then
-      echo "No ~/code or /code directory found"
-      return
+      base=""
     fi
+  fi
+  echo "$base"
+}
+
+
+goco() {
+
+  local base="$(__code_base_dir)"
+  if [[ -z "$base" ]] 
+  then
+    echo "No ~/code or /code directory found"
+    return 1
   fi
 
   local match="$(echo $1 | fold -w1 | paste -sd' ' - | sed -e 's/ /.*/g')"
@@ -56,10 +66,87 @@ goco() {
 
   if [[ -n "$dir" ]] ; then
     cd $dir
-    label "$(pwd | sed -e 's|.*code/src/[^/]*/\([^/]*\)/\([^/]*\).*|[\1:\2]|')"
+    [[ -f $HOME/bin/label ]] && label "$(pwd | sed -E 's|.*/code/(src/)?[^/]*/([^/]*)/([^/]*).*|[\2/\3]|')"
+    return 0
   else
     echo "No match found"
+    return 1
   fi
+}
+
+gogit() {
+
+  local base="$(__code_base_dir)"
+  if [[ -z "$base" ]] 
+  then
+    echo "No ~/code or /code directory found"
+    return 1
+  fi
+  [[ -d ${base}/src ]] && base="${base}/src"
+
+  local host
+  local org
+  local repo
+
+  # If we're in the code path
+  path_info="$(pwd | sed -E 's|.*/code/(src/)?(([^/]*)/(([^/]*)(/([^/]*))))?|\3 \5 \7|')"
+  if [[ "$path_info" != "$(pwd)" ]] 
+  then
+    read host org repo <<< $path_info
+    if [[ $host == 'src' ]]
+    then
+      read host org  <<< "$org $repo "
+      repo=''
+    fi
+  fi
+
+  # Check the args for replacements
+  if [[ "${#@}" -gt "3" ]]
+  then
+    echo "Too many arguments: Expecting 0-3 arguments [[[host] org] repo] -- got $@"
+    return 1
+  fi
+
+  # Replace components with args given
+  case ${#@} in 
+    3)
+      read host org repo <<< "$@" ;;
+    2)
+      read org repo <<< "$@" ;;
+    1)
+      repo="$1" ;;
+  esac
+
+  # Check we got it all
+  if [[ -z "$host" ]] 
+  then
+    echo "Host cannot be determined from path and was not provided"
+    return 1
+  elif [[ -z "$org" ]]
+  then
+    echo "Organization cannot be determined from path and was not provided"
+    return 1
+  elif [[ -z "$repo" ]] 
+  then
+    echo "Repository cannot be determined from path and was not provided"
+    return 1
+  fi
+
+  cd ${base}
+  echo "Creating ${base}/${host}/${org}/${repo} if needed"
+  mkdir -p "${host}/${org}/${repo}"
+  cd ${host}/${org}/${repo}
+
+  local host_connect
+  if [[ -f "${base}/${host}/.host_connect" ]]
+  then 
+    host_connect="$(cat "${base}/${host}/.host_connect")"
+  else
+    host_connect="git@${host}:"
+  fi
+  echo ">" git clone "${host_connect}${org}/${repo}" .
+  git clone "${host_connect}${org}/${repo}" .
+  goco $PWD
 }
 
 alias ls="\ls -aFG"
