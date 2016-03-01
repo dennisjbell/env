@@ -66,7 +66,7 @@ goco() {
 
   if [[ -n "$dir" ]] ; then
     cd $dir
-    [[ -f $HOME/bin/label ]] && label "$(pwd | sed -E 's|.*/code/(src/)?[^/]*/([^/]*)/([^/]*).*|[\2/\3]|')"
+    [[ -f $HOME/bin/label ]] && label "[$(pwd | sed -E 's|.*/code/(src/)?[^/]*/([^/]*)/([^/]*).*|\2/\3|')@$(hostname)]"
     return 0
   else
     echo "No match found"
