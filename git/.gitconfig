@@ -19,7 +19,7 @@
 [mergetool]
 	keepBackup = true
 [core]
-	excludesfile = /Users/dbell/.gitignore
+	excludesfile = ~/.gitignore
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
