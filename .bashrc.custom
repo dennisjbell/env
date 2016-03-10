@@ -89,13 +89,15 @@ gogit() {
   local repo
 
   # If we're in the code path
-  path_info="$(pwd | sed -E 's|.*/code/(src/)?(([^/]+)(/([^/]+)(/([^/]+))?))?|\3;\5;\7|')"
+  path_info="$(pwd | sed -E 's|.*/code/(src/)?(([^/]+)(/([^/]+)(/([^/]+))?))?|\3 \5 \7|')"
+  echo $path_info
   if [[ "$path_info" != "$(pwd)" ]] 
   then
-    IFS=';' read host org repo <<< $path_info
+    read host org repo <<< $path_info
+    echo "Host: $host ; Org: $org ; Repo: $repo"
     if [[ $host == 'src' ]]
     then
-      IFS=';' read host org  <<< "$org $repo "
+      read host org  <<< "$org $repo "
       repo=''
     fi
   fi
