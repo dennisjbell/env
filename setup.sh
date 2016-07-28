@@ -1,6 +1,23 @@
-#!/bin/bash
+#!/bin/bash 
 
-basedir="$(realpath $(dirname $0))"
+set -e
+
+rpath() {
+  if command realpath > /dev/null 2>&1
+  then
+    realpath "$1"
+  else
+    readlink -m "$1"
+  fi
+}
+
+basedir="$(rpath $(dirname $0))"
+
+if [[ -z "${basedir}" ]]
+then
+  echo "Could not determine base directory for env repo"
+  exit 1
+fi
 
 cd $HOME
 
