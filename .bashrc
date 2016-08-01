@@ -89,6 +89,15 @@ esac
 # Make sure home bin directory is the first thing in the path
 export PATH="$HOME/bin:$PATH"
 
+# Predictable SSH authentication socket location.
+SOCK="/tmp/ssh-agent-$USER-tmux"
+if test $SSH_AUTH_SOCK && [ $SSH_AUTH_SOCK != $SOCK ]
+then
+    rm -f $SOCK
+    ln -sf $SSH_AUTH_SOCK $SOCK
+    export SSH_AUTH_SOCK=$SOCK
+fi
+
 # -----------------------------------------------------------------------------
 # Anything appended below should be moved to .bashrc.local
 # -----------------------------------------------------------------------------
