@@ -5,7 +5,7 @@ require 'open-uri'
 
 bundle_data = {
   :"vim-ruby" => %w[vim-ruby],
-  :"vim-scripts" => %w[AutoTag jQuery matchit.zip Gist.vim IndexedSearch Color-Sampler-Pack ColorSchemeMenuMaker ScrollColors xterm16.vim netrw.vim ZoomWin],
+  :"vim-scripts" => %w[AutoTag bash-support jQuery matchit.zip Gist.vim IndexedSearch Color-Sampler-Pack ColorSchemeMenuMaker ScrollColors xterm16.vim netrw.vim ZoomWin],
   :tpope => %w[vim-cucumber vim-fugitive vim-git vim-haml vim-markdown vim-repeat vim-unimpaired vim-surround vim-vividchalk],
   :RubidiumStudios => %w[vim-rails],
   :jpalardy => %w[vim-slime],
@@ -21,6 +21,7 @@ bundle_data = {
   :suan => %w[vim-instant-markdown],
   :reinh => %w[vim-makegreen],
   :fatih => %w[vim-go],
+  :lmeijvogel => %w[vim-yaml-helper],
   :Shougo =>%w[neocomplete],
 #  :ervandew => %w[supertab],   # -- interferes with snipmate
 #  :wgibbs => %w[vim-irblack],  # -- colorscheme I'm not using

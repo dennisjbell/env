@@ -161,6 +161,15 @@ alias lsa="ls -lAht"
 alias ..="cd .."
 alias cdd="cd -"
 
+# Compare
+alias same="diff --unchanged-group-format=i"'"'"@@ %dn,%df%c'\012'%<"'"'" --old-group-format='' --new-group-format='' --changed-group-format=''"
+
+if command -v pygmentize >/dev/null 2>&1
+then
+  alias cncat='pygmentize -g -O style=colorful,linenos=1'
+  alias ccat='pygmentize -g -O style=colorful'
+fi
+
 # Utility
 alias screen="screen -U"
 alias reload="source ~/.bashrc"

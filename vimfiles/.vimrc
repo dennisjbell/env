@@ -122,7 +122,7 @@ map <Leader>z :ZoomWin<CR>
 " NERDTree configuration
 let NERDTreeIgnore=['\.rbc$', '\~$']
 let NERDTreeShowHidden=1
-nmap <C-A> :NERDTreeTabsToggle<CR>
+nmap <C-E> :NERDTreeTabsToggle<CR>
 nmap <C-^> :NERDTreeFind<CR>
 "autocmd VimEnter * NERDTree
 autocmd BufEnter * NERDTreeMirror
