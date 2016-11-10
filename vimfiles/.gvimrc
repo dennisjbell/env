@@ -1,10 +1,10 @@
 " GUI Scheme
 set guifont=Anonymous\ Pro:h15
 set mousehide
-set transparency=12
+set transparency=0 " was 12
 set noequalalways
-set background=dark
-color vividchalk
+"set background=dark
+"color vividchalk
 highlight ColorColumn guibg=#0x202028
 
 " Start without the toolbar, but with tabbar
@@ -34,6 +34,10 @@ map  <S-D-Right> :tabnext<CR>
 map! <S-D-Right> <ESC>:tabnext<CR>li
 map  <S-D-Left> :tabprevious<CR>
 map! <S-D-Left> <ESC>:tabprevious<CR>li
+
+set listchars=tab:⦙\ ,trail:∙,extends:⊳,precedes:⊲,nbsp:◦
+set listchars+=eol:⤸ "if you want to see EOLs
+let g:indentLine_color_gui = '#A4E57E'
 
 " ConqueTerm wrapper -- disabled currentl
 "map <D->> :call StartTerm()<CR>

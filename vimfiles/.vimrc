@@ -15,7 +15,6 @@ set expandtab
 set smarttab
 set autoindent
 set smartindent
-set list listchars=tab:\ \ ,trail:·
 
 " Searching
 set hlsearch
@@ -69,10 +68,9 @@ set wrapscan                                 "searches wrap around EOF
 set whichwrap=27                             "bitwize representation of "b,s,<,>,[,]"
 set clipboard=unnamed
 set encoding=utf-8
-set listchars=tab:→\ ,trail:∙,extends:⊳,precedes:⊲,nbsp:□
-"set listchars+=eol:⤸ "if you want to see EOLs
+set listchars=tab:⦙\ ,trail:∙,extends:⊳,precedes:⊲,nbsp:◦
+set listchars+=eol:↩︎ "if you want to see EOLs
 set list
-
 " Remember last location in file
 if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
@@ -91,10 +89,17 @@ syntax on
 filetype on
 filetype plugin on
 filetype indent on
+set omnifunc=syntaxcomplete#Complete
 
 " Scheme
 set colorcolumn=80
-color vividchalk " was navajo-midnight
+set background=dark
+color termschool
+  " Previously:
+  "   cobalt2
+  "   base16-ateliersulphurpool
+  "   vividchalk
+  "   navajo-midnight
 highlight ColorColumn ctermbg=1
 let html_use_css=1
 let html_output_xhtml=1
@@ -177,3 +182,11 @@ vmap <C-M-Down> ]egv
 " Use modeline overrides
 set modeline
 set modelines=10
+
+" indentLine
+let g:indentLine_color_term = 239
+let g:indentLine_char = '⦙'
+
+                     
+                      
+						

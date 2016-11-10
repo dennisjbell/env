@@ -101,3 +101,5 @@ fi
 # -----------------------------------------------------------------------------
 # Anything appended below should be moved to .bashrc.local
 # -----------------------------------------------------------------------------
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting

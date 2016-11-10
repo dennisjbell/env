@@ -8,6 +8,7 @@ bundle_data = {
   :"vim-scripts" => %w[AutoTag bash-support.vim jQuery matchit.zip Gist.vim IndexedSearch Color-Sampler-Pack ColorSchemeMenuMaker ScrollColors xterm16.vim netrw.vim ZoomWin],
   :tpope => %w[vim-cucumber vim-fugitive vim-git vim-haml vim-markdown vim-repeat vim-unimpaired vim-surround vim-vividchalk],
   :RubidiumStudios => %w[vim-rails],
+  :rhysd => %w[vim-crystal],
   :jpalardy => %w[vim-slime],
   :lucapette => %w[vim-jquery-doc vim-ruby-doc],
   :astashov => %w[vim-ruby-debugger],
@@ -23,10 +24,29 @@ bundle_data = {
   :fatih => %w[vim-go],
   :lmeijvogel => %w[vim-yaml-helper],
   :Shougo =>%w[neocomplete],
-#  :ervandew => %w[supertab],   # -- interferes with snipmate
-#  :wgibbs => %w[vim-irblack],  # -- colorscheme I'm not using
-#  :tomtom => %w[tcomment_vim], # -- not using because we're using nerdcommenter
-  :wincent => %w[Command-T] 
+  :wincent => %w[Command-T],
+  :wakatime => %w[vim-wakatime],
+  :Yggdroot => %w[indentLine],
+
+  # Colorschemes - from vimcolors.com
+  :Addisonbean => %w[Vim-Xcode-Theme],
+  :GertjanReynaert => %w[cobalt2-vim-theme],
+  :YorickPeterse => %w[happy_hacking.vim],
+  :albertocg => %w[contrastneed-theme],
+  :atelierbram => %w[vim-colors_atelier-schemes vim-colors_duotones],
+  :bounceme => %w[base.vim],
+  :encody => %w[vim-colors],
+  :gryftir => %w[gryffin],
+  :josuegaleas => %w[jay],
+  :lifepillar => %w[vim-solarized8],
+  :marciomazza => %w[vim-brogrammer-theme],
+  :marcopaganini => %w[termschool-vim-theme],
+  :mkarmona => %w[colorsbox],
+  :rakr => %w[vim-one],
+  :roosta => %w[vim-srcery],
+  :the31k => %w[vim-colors-tayra],
+  :tyrannicaltoucan => %w[vim-deep-space],
+  :wellsjo => %w[wellsokai.vim],
 }
 
 git_bundles = []
