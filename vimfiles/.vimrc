@@ -121,11 +121,14 @@ let g:slime_target = "tmux"
 let g:rails_level = 3
 let g:rails_menu = 2
 
+" Crystal
+let g:crystal_auto_format = 1
+
 " ZoomWin configuration
 map <Leader>z :ZoomWin<CR>
 
 " NERDTree configuration
-let NERDTreeIgnore=['\.rbc$', '\~$']
+let NERDTreeIgnore=['\.rbc$', '\~$', '^\..*\.sw.$']
 let NERDTreeShowHidden=1
 nmap <C-E> :NERDTreeTabsToggle<CR>
 nmap <C-^> :NERDTreeFind<CR>
