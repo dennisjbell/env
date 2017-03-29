@@ -8,6 +8,9 @@ type _bash_history_sync > /dev/null 2>&1 && return
 # PATH
 export PATH="$HOME/bin:$PATH"
 
+# Perlbrew support (think rvm for perl)
+[[ -d "$HOME/perl5/perlbrew/etc/" && -f "$HOME/perl5/perlbrew/etc/bashrc" ]] && source $HOME/perl5/perlbrew/etc/bashrc
+
 # RVM Support
 [[ -d "$HOME/.rvm/bin" ]] && [[ -f "$HOME/.bashrc.rvm" ]] && source $HOME/.bashrc.rvm
 
