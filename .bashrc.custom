@@ -236,3 +236,78 @@ alias grr='diffs="$(git status | grep "both modified:" | sed -e "s/.*both modifi
 # Use vi mode
 #set -o vi
 
+# -----------------------------------------------------------------------------
+# Network aliases and functions
+# -----------------------------------------------------------------------------
+showcert() {
+  echo | \
+    openssl s_client -showcerts -servername $1 -connect $1:${2:-443} 2>/dev/null | \
+    openssl x509 -inform pem -noout -text
+}
+
+
+# -----------------------------------------------------------------------------
+# colorize
+# -----------------------------------------------------------------------------
+color() {
+  local colors=" k=0 r=1 g=2 y=3 b=4 m=5 p=5 c=6 w=7 "
+  local ansi="" c="$(echo "$2" | tr "[:upper:]" "[:lower:]")"
+  local fg="${c:0:1}" bg="${c:1:1}"
+  if [[ -n "${fg}" ]] ; then
+    ansi="3$(echo "$colors" | sed "s/.* ${fg}=\\([^ ]*\\) .*/\\1/")"
+    [[ "${#ansi}" -eq 2 ]] || ansi=""
+    [[ "${fg}" == "${2:0:1}" || -z "$ansi" ]] || ansi="1;${ansi}"
+  fi
+  if [[ -n "${bg}" ]] ; then
+    local bg_ansi="4$(echo "$colors" | sed "s/.* ${bg}=\\([^ ]*\\) .*/\\1/")"
+    [[ "${#bg_ansi}" -eq 2 ]] && ansi="${ansi:+$ansi;}$bg_ansi"
+  fi
+  printf "\x1b[${ansi}m%b\x1b[0m" "$1"
+}
+
+rainbow() {
+  colors="rRyYGCbp"; ci=-1
+  si=0;
+  out=""
+  local str="$(printf "%b" "$1.")"
+  str="${str:0:${#str}-1}" # preserve trailing newlines
+  while [[ $si -lt "${#str}" ]] ; do
+    ch="${str:$si:1}"
+    if [[ "$ch" =~ ^[[:print:]]$ ]] ; then
+      let 'ci++'
+      out="${out}$(color "$ch" ${colors:$((ci % 8 )):1}$2)"
+    else
+      out="$out$ch"
+    fi
+    let "si++"
+  done
+  printf "%b" "$out"
+}
+
+contains() {
+  # returns 0 if present, 1 if not; outputs index where element found
+  # NOTE: index is 1-based, to support $@;
+  local el=$1; shift
+  local re_mode=false
+  if [[ "$el" =~ ^/.*/$ ]] ; then
+    re_mode=true
+    el="${el:1:${#el}-2}"
+  fi
+  local i=1
+  while (( $# > 0 )) ; do
+    local found=false
+    if $re_mode ; then
+      [[ "$1" =~ $el ]] && found=true
+    else
+      [[ "$1" == "$el" ]] && found=true
+    fi
+    if $found ; then
+      echo $i;
+      return 0
+    fi
+    shift
+    (( ++i ))
+  done
+  return 1
+}
+
