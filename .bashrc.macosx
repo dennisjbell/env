@@ -12,3 +12,5 @@ netpid() {
   ps uwwx -p $(lsof -n -i4TCP:$1 | grep LISTEN | awk '{print $2}')
 }
 
+# Brew bash_completion
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion

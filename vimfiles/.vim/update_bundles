@@ -92,7 +92,7 @@ Dir.chdir(bundles_dir) do
 end
 
 # Special handling for Command-T
-Dir.chdir(File.join(bundles_dir,"Command-T","ruby/command-t")) do
+Dir.chdir(File.join(bundles_dir,"Command-T","ruby/command-t/ext/command-t")) do
   if `rvm > /dev/null 2>&1` && $?.exitstatus == 1
     system "rvm system ruby extconf.rb"
   else

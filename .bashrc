@@ -78,6 +78,7 @@ case $OSTYPE in
   DIST=$(lsb_release -si)
   case ${DIST} in
   (Ubuntu)
+    echo "Ubuntu OS detected!"
     initializer="ubuntu";;
   (*)
     initializer="linux";;
@@ -88,6 +89,10 @@ esac
 # Load the general and localized custom initialization
 [[ -f "$HOME/.bashrc.custom" ]] && source $HOME/.bashrc.custom
 [[ -f "$HOME/.bashrc.local" ]]  && source $HOME/.bashrc.local
+
+#Aliases files
+[[ -f "$HOME/.bashrc.aliases" ]] && source $HOME/.bashrc.aliases
+[[ -f "$HOME/.bashrc.aliases.$initializer" ]] && source $HOME/.bashrc.aliases.$initializer
 
 # Make sure home bin directory is the first thing in the path
 export PATH="$HOME/bin:$PATH"

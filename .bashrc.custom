@@ -192,7 +192,7 @@ alias ga="git add"
 alias gaa="git add ."
 
 # Git Commit
-alias gcam="git commit -a -m"
+alias gc="git commit --verbose -p"
 
 # Git Checkout
 alias gcom="git checkout master"
