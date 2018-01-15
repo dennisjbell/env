@@ -7,7 +7,7 @@ rpath() {
   then
     realpath "$1"
   else
-    readlink -m "$1"
+    echo "$(cd "$(dirname "$1")"; pwd -P)/$(basename "$1")"
   fi
 }
 
@@ -26,17 +26,19 @@ mkdir -p $backupdir
 shopt -s nullglob
 for file in .bash* .{g,}vim* .git*
 do
-  if [ ! -L $file ] ; then	mv ${file} ${backupdir}; fi
+  if [ ! -L $file ] ; then mv ${file} ${backupdir}; fi
 done
 
 for file in ${basedir}/.bash* ${basedir}/git/.??* ${basedir}/vimfiles/.{g,}vim*; do
-	ln -sfn $file $HOME/
+  ln -sfn $file $HOME/
 done
 
 mkdir -p ${HOME}/bin
 for file in ${basedir}/bin/*; do
-	ln -sfn $file ${HOME}/bin/
+  ln -sfn $file ${HOME}/bin/
 done
+
+mkdir -p $HOME/tmp/vim-backups
 
 cd .vim
 #TODO check required libraries and run this

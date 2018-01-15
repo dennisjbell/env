@@ -106,8 +106,10 @@ then
     export SSH_AUTH_SOCK=$SOCK
 fi
 
+RVM_LATE_BINDING=1
+[[ -d "$HOME/.rvm/bin" ]] && [[ -f "$HOME/.bashrc.rvm" ]] && source $HOME/.bashrc.rvm
+
+
 # -----------------------------------------------------------------------------
 # Anything appended below should be moved to .bashrc.local
 # -----------------------------------------------------------------------------
-
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
