@@ -14,6 +14,9 @@ export PATH="$HOME/bin:$PATH"
 # RVM Support
 [[ -d "$HOME/.rvm/bin" ]] && [[ -f "$HOME/.bashrc.rvm" ]] && source $HOME/.bashrc.rvm
 
+# PerlBrew Support
+[[ -d "$HOME/perl5/perlbrew/etc" ]] && [[ -f "$HOME/perl5/perlbrew/etc/bashrc" ]] && source "$HOME/perl5/perlbrew/etc/bashrc"
+
 # If not running interactively, don't do anything else
 [ -z "$PS1" ] && return
 
@@ -40,10 +43,11 @@ PROMPT_COMMAND=_bash_history_sync
 # =============================================================================
 # Prompt configuration
 # -----------------------------------------------------------------------------
-PSstatus="[\[\e[1;33m\]\!\[\e[0;39m\]/\$(err_code=\$?; if [ \$err_code == 0 ] ; then echo \"\[\e[0;32m\]0\[\e[0;39m\]\" ;else echo \"\[\e[1;31m\]\$err_code\[\e[0;39m\]\"; fi)] \[\e[1;36m\]\u\[\e[1;37m\]@\[\e[0;36m\]\h\[\e[1;37m\] "
+PSstatus="[\[\e[1;33m\]\!\[\e[0;39m\]/\$(err_code=\$?; if [ \$err_code == 0 ] ; then echo \"\[\e[0;32m\]0\[\e[0;39m\]\" ;else echo \"\[\e[1;31m\]\$err_code\[\e[0;39m\]\"; fi)/\[\e[0;36m\]\$($HOME/bin/tt --prompt)\[\e[1;37m\]] \[\e[1;36m\]\u\[\e[1;37m\]@\[\e[0;36m\]\h\[\e[1;37m\] "
 PSgit="\[\e[0;35m\]\$(vcprompt)"
 PSrvm="${PSrvm:-}"
 PSprompt="\n\[\e[1;34m\]\w \[\e[1;37m\]∴\[\e[0;39m\] "
+PStt="\$(tt --prompt) "
 
 type git >/dev/null 2>&1
 if [[ $? == 0 ]]; then
