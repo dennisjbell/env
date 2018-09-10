@@ -1,5 +1,5 @@
 " GUI Scheme
-set guifont=Anonymous\ Pro:h15
+set guifont=Anonymice\ Nerd\ Font\ Complete\ Mono:h17
 set mousehide
 set transparency=0 " was 12
 set noequalalways
@@ -38,6 +38,21 @@ map! <S-D-Left> <ESC>:tabprevious<CR>li
 set listchars=tab:⦙\ ,trail:∙,extends:⊳,precedes:⊲,nbsp:◦
 set listchars+=eol:⤸ "if you want to see EOLs
 let g:indentLine_color_gui = '#A4E57E'
+
+let g:NERDTreeIndicatorMapCustom = {
+            \ 'Modified'  : '∗',
+            \ 'Staged'    : '+',
+            \ 'Untracked' : '?',
+            \ 'Renamed'   : '>',
+            \ 'Unmerged'  : '•',
+            \ 'Deleted'   : '⨯',
+            \ 'Dirty'     : '…',
+            \ 'Clean'     : '✓',
+            \ 'Ignored'   : '¿',
+            \ 'Unknown'   : '⚬'
+            \ }
+
+highlight NERDTreeGitStatusModified guifg=gold1
 
 " ConqueTerm wrapper -- disabled currentl
 "map <D->> :call StartTerm()<CR>

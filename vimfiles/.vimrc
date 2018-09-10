@@ -114,6 +114,9 @@ set shell=/bin/bash
 let g:ruby_doc_command='open'
 let g:jquery_doc_command='open'
 
+" Lisp
+let g:lisp_rainbow = 1
+
 " Slime config
 let g:slime_target = "tmux"
 
@@ -124,10 +127,14 @@ let g:rails_menu = 2
 " Crystal
 let g:crystal_auto_format = 1
 
+" Golang
+let g:go_version_warning = 0
+
 " ZoomWin configuration
 map <Leader>z :ZoomWin<CR>
 
 " NERDTree configuration
+let g:NERDTreeWinSize=20
 let NERDTreeIgnore=['\.rbc$', '\~$', '^\..*\.sw.$']
 let NERDTreeShowHidden=1
 nmap <C-E> :NERDTreeTabsToggle<CR>
@@ -158,7 +165,8 @@ function s:setupMarkup()
   map <buffer> <Leader>p :Mm <CR>
 endfunction
 
-" make and python use real tabs
+" perl, make and python use real tabs
+au FileType perl                                     set noexpandtab
 au FileType make                                     set noexpandtab
 au FileType python                                   set noexpandtab
 

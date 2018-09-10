@@ -17,6 +17,7 @@ bundle_data = {
   :godlygeek => %w[tabular],
   :scrooloose => %w[nerdtree nerdcommenter snipmate-snippets],
   :jistr => %w[vim-nerdtree-tabs],
+  :Xuyuanp => %w[nerdtree-git-plugin],
   :timcharper => %w[textile.vim],
   :mileszs => %w[ack.vim],
   :suan => %w[vim-instant-markdown],
