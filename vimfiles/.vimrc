@@ -120,6 +120,11 @@ let g:lisp_rainbow = 1
 " Slime config
 let g:slime_target = "tmux"
 
+" Ruby
+if v:version >= 801
+  set rubydll=$HOME/.rvm/rubies/ruby-2.5.1/lib/libruby.2.5.dylib
+endif
+
 " Rails
 let g:rails_level = 3
 let g:rails_menu = 2
@@ -197,7 +202,3 @@ set modelines=10
 " indentLine
 let g:indentLine_color_term = 239
 let g:indentLine_char = '⦙'
-
-                     
-                      
-						

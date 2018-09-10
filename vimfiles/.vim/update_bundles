@@ -20,14 +20,14 @@ bundle_data = {
   :Xuyuanp => %w[nerdtree-git-plugin],
   :timcharper => %w[textile.vim],
   :mileszs => %w[ack.vim],
-  :suan => %w[vim-instant-markdown],
+#  :suan => %w[vim-instant-markdown],
   :reinh => %w[vim-makegreen],
   :fatih => %w[vim-go],
   :lmeijvogel => %w[vim-yaml-helper],
-  :Shougo =>%w[neocomplete],
+#  :Shougo =>%w[neocomplete],
   :wincent => %w[Command-T],
-  :wakatime => %w[vim-wakatime],
-  :Yggdroot => %w[indentLine],
+#  :wakatime => %w[vim-wakatime],
+#  :Yggdroot => %w[indentLine],
 
   # Colorschemes - from vimcolors.com
   :Addisonbean => %w[Vim-Xcode-Theme],
@@ -93,14 +93,18 @@ Dir.chdir(bundles_dir) do
 end
 
 # Special handling for Command-T
+vim_version = (/.* ([\d]*\.[\d]*) \(.*/.match(`vim --version | head -n1`)[1] || 0).to_f
+have_rvm = `rvm > /dev/null 2>&1` && $?.exitstatus == 0 && !!ENV['MY_RUBY_HOME'];
+cmd = (have_rvm && vim_version < 8.1) ? "rvm system ruby extconf.rb" : "/usr/bin/env ruby extconf.rb"
 Dir.chdir(File.join(bundles_dir,"Command-T","ruby/command-t/ext/command-t")) do
-  if `rvm > /dev/null 2>&1` && $?.exitstatus == 1
-    system "rvm system ruby extconf.rb"
-  else
-    system "/usr/bin/ruby extconf.rb" # assume /usr/bin/ruby is system ruby
-  end
+  system cmd
   system "make clean && make"
 end
+if have_rvm && vim_version >= 8.1
+  dll = `find $MY_RUBY_HOME -name '*.dylib' -type f | head -n1`.chomp
+  system 'sed -e \'s|^\( *\)set rubydll.*|\1set rubydll='+dll+'|\' -i "" '+File.realpath("#{ENV['HOME']}/.vimrc")
+end
+
 
 # Special handling for scrooloose's snippets -- need to move into a snippets subdirectory to work 
 # currently disabled because of conflicts
