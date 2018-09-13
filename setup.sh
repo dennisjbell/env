@@ -40,6 +40,30 @@ done
 
 mkdir -p $HOME/tmp/vim-backups
 
+# Load the OS-specific initializations
+case $OSTYPE in
+(darwin*)
+  initializer="macosx";;
+(linux*)
+  DIST=$(lsb_release -si)
+  case ${DIST} in
+  (Ubuntu)
+    echo "Ubuntu OS detected - installing Ubuntu extras:"
+    echo "  - cat -> bat"
+    (cd tmp \
+     && wget "https://github.com/sharkdp/bat/releases/download/v0.7.0/bat_0.7.0_amd64.deb" \
+     && sudo sudo dpkg -i bat_0.7.0_amd64.deb)
+
+    echo "  - ruby-dev libraries"
+    sudo apt install ruby-dev
+    ;;
+  (*)
+    initializer="linux";;
+  esac;;
+esac
+
 cd .vim
+
+
 #TODO check required libraries and run this
 echo "Run ~/.vim/update_bundles"

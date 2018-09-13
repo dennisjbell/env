@@ -170,9 +170,9 @@ then
   alias ccat='pygmentize -g -O style=colorful'
 fi
 
-# Utility
-alias screen="screen -U"
-alias reload="source ~/.bashrc"
+if command bat --version >/dev/null ; then
+  alias cat="bat"
+fi
 
 # Search
 alias fid='find . -regex '\''.*'\'' | xargs grep'
