@@ -1,5 +1,6 @@
 " GUI Scheme
-set guifont=Anonymice\ Nerd\ Font\ Complete\ Mono:h17
+"set guifont=Anonymice\ Nerd\ Font\ Complete\ Mono:h17
+set guifont=RobotoMonoForPowerline-Light:h15
 set mousehide
 set transparency=0 " was 12
 set noequalalways
@@ -10,6 +11,7 @@ highlight ColorColumn guibg=#0x202028
 " Start without the toolbar, but with tabbar
 set guioptions-=T
 set showtabline=2
+set guitablabel=%f\ %m
 
 if has("gui_macvim")
   " Fullscreen takes up entire screen

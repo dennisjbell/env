@@ -27,10 +27,10 @@ set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc
 
 " Tab Navigation
-map  <C-tab> :tabnext<CR>
-map!  <C-tab> <ESC>:tabnext<CR>li
-map  <C-S-tab> :tabprevious<CR>
-map!  <C-S-tab> <ESC>:tabprevious<CR>li
+"map  <C-tab> :tabnext<CR>
+"map!  <C-tab> <ESC>:tabnext<CR>li
+"map  <C-S-tab> :tabprevious<CR>
+"map!  <C-S-tab> <ESC>:tabprevious<CR>li
 
 " Layout
 set laststatus=2
@@ -45,7 +45,7 @@ set statusline=   " clear the statusline for when vimrc is reloaded
 "set statusline+=%-3.3n\                      " buffer number
 set statusline+=%h%m%r%w                     " flags
 set statusline+=%f\                          " file name
-set statusline+=%{exists('g:loaded_fugitive')?fugitive#statusline():''}\ 
+set statusline+=%{exists('g:loaded_fugitive')?fugitive#statusline():''}\  " keep the space at the end
 set statusline+=[%{strlen(&ft)?&ft:'none'},  " filetype
 set statusline+=%{strlen(&fenc)?&fenc:&enc}, " encoding
 set statusline+=%{&fileformat}]              " file format
@@ -107,7 +107,7 @@ let html_output_xhtml=1
 " Backups
 set backup
 set backupcopy=yes  "backup to copy, save over original -- for programs that watch for changes to original files
-set backupdir=~/tmp/vim-backups,/tmp/vim-backups,. 
+set backupdir=~/tmp/vim-backups,/tmp/vim-backups,.
 
 " Commands
 set shell=/bin/bash
@@ -122,7 +122,7 @@ let g:slime_target = "tmux"
 
 " Ruby
 if v:version >= 801
-  set rubydll=$HOME/.rvm/rubies/ruby-2.5.1/lib/libruby.2.5.dylib
+  set rubydll=/Users/dbell/.rvm/rubies/ruby-2.4.1/lib/libruby.2.4.1.dylib
 endif
 
 " Rails
@@ -202,3 +202,17 @@ set modelines=10
 " indentLine
 let g:indentLine_color_term = 239
 let g:indentLine_char = '⦙'
+
+" ALE
+let g:ale_linters = {'perl': ['perl']}
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_sign_column_always = 0
+
+" Airline
+let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#whitespace#mixed_indent_algo = 2
+let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing', 'long', 'mixed-indent' ]
+let g:airline_powerline_fonts = 1
+let g:airline_theme='jay'
+nmap <silent> <M-S-tab> <Plug>(ale_previous_wrap)
+nmap <silent> <M-tab>   <Plug>(ale_next_wrap)

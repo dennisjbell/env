@@ -26,6 +26,8 @@ bundle_data = {
   :lmeijvogel => %w[vim-yaml-helper],
 #  :Shougo =>%w[neocomplete],
   :wincent => %w[Command-T],
+  :w0rp => %w[ale],
+  :"vim-airline" => %w[vim-airline vim-airline-themes],
 #  :wakatime => %w[vim-wakatime],
 #  :Yggdroot => %w[indentLine],
 
