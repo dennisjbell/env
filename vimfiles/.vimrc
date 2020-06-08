@@ -1,6 +1,7 @@
 set nocompatible
 syntax on
 filetype off
+set runtimepath^=~/djbell-env/vimfiles/.vim
 
 "Use Pathogen to manage plugins
 call pathogen#infect()

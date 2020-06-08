@@ -34,7 +34,7 @@ mcd() {
 }
 
 __code_base_dir() {
-  local base="$HOME/code"
+  local base="$DJBELL_BASE/code"
   if [ ! -d $base ] ; then
     base="/code"
     if [ ! -d $base ] ; then
@@ -50,7 +50,7 @@ goco() {
   local base="$(__code_base_dir)"
   if [[ -z "$base" ]] 
   then
-    echo "No ~/code or /code directory found"
+    echo "No $DJBELL_BASE/code or /code directory found"
     return 1
   fi
 
@@ -66,7 +66,7 @@ goco() {
 
   if [[ -n "$dir" ]] ; then
     cd $dir
-    [[ -f $HOME/bin/label ]] && label "[$(pwd | sed -E 's|.*/code/(src/)?[^/]*/([^/]*)/([^/]*).*|\2/\3|')@$(hostname)]"
+    [[ -f $DJBELL_BASE/bin/label ]] && label "[$(pwd | sed -E 's|.*/code/(src/)?[^/]*/([^/]*)/([^/]*).*|\2/\3|')@$(hostname)]"
     return 0
   else
     echo "No match found"
@@ -79,7 +79,7 @@ gogit() {
   local base="$(__code_base_dir)"
   if [[ -z "$base" ]] 
   then
-    echo "No ~/code or /code directory found"
+    echo "No $DJBELL_BASE/code or /code directory found"
     return 1
   fi
   [[ -d ${base}/src ]] && base="${base}/src"
@@ -170,7 +170,7 @@ then
   alias ccat='pygmentize -g -O style=colorful'
 fi
 
-if command bat --version >/dev/null ; then
+if command bat --version 2>/dev/null ; then
   alias cat="bat"
 fi
 
@@ -185,7 +185,7 @@ alias tgzx="tar -zxvf"
 # -----------------------------------------------------------------------------
 # Git Aliases
 # -----------------------------------------------------------------------------
-export PATH="$HOME/bin/git-utils:$PATH"
+export PATH="$DJBELL_BASE/bin/git-utils:$PATH"
 
 # Git Add
 alias ga="git add"

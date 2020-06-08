@@ -89,6 +89,7 @@ use Time::HiRes qw(time);
 
 ### prechecks ###
 my $ps0 = $ENV{PS0};
+$ps0 = $ENV{PS00} unless $ps0;
 unless ($ps0) {
   print "!define PS0!> ";
   exit 1;

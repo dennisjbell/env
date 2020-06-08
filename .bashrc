@@ -4,18 +4,19 @@
 
 # Don't source twice...
 type _bash_history_sync > /dev/null 2>&1 && return
+[[ -n "$DJBELL_BASE" ]] && export DJBELL_BASE="$DJBELL_BASE"
 
 # PATH
-export PATH="$HOME/bin:$PATH"
+export PATH="$DJBELL_BASE/bin:$PATH"
 
 # Perlbrew support (think rvm for perl)
-[[ -d "$HOME/perl5/perlbrew/etc/" && -f "$HOME/perl5/perlbrew/etc/bashrc" ]] && source $HOME/perl5/perlbrew/etc/bashrc
+[[ -d "$DJBELL_BASE/perl5/perlbrew/etc/" && -f "$DJBELL_BASE/perl5/perlbrew/etc/bashrc" ]] && source $DJBELL_BASE/perl5/perlbrew/etc/bashrc
 
 # RVM Support
-[[ -d "$HOME/.rvm/bin" ]] && [[ -f "$HOME/.bashrc.rvm" ]] && source $HOME/.bashrc.rvm
+[[ -d "$DJBELL_BASE/.rvm/bin" ]] && [[ -f "$DJBELL_BASE/.bashrc.rvm" ]] && source $DJBELL_BASE/.bashrc.rvm
 
 # PerlBrew Support
-[[ -d "$HOME/perl5/perlbrew/etc" ]] && [[ -f "$HOME/perl5/perlbrew/etc/bashrc" ]] && source "$HOME/perl5/perlbrew/etc/bashrc"
+[[ -d "$DJBELL_BASE/perl5/perlbrew/etc" ]] && [[ -f "$DJBELL_BASE/perl5/perlbrew/etc/bashrc" ]] && source "$DJBELL_BASE/perl5/perlbrew/etc/bashrc"
 
 # If not running interactively, don't do anything else
 [ -z "$PS1" ] && return
@@ -43,7 +44,7 @@ PROMPT_COMMAND=_bash_history_sync
 # =============================================================================
 # Prompt configuration
 # -----------------------------------------------------------------------------
-PSstatus="[\[\e[1;33m\]\!\[\e[0;39m\]/\$(err_code=\$?; if [ \$err_code == 0 ] ; then echo \"\[\e[0;32m\]0\[\e[0;39m\]\" ;else echo \"\[\e[1;31m\]\$err_code\[\e[0;39m\]\"; fi)/\[\e[0;36m\]\$($HOME/bin/tt --prompt)\[\e[1;37m\]] \[\e[1;36m\]\u\[\e[1;37m\]@\[\e[0;36m\]\h\[\e[1;37m\] "
+PSstatus="[\[\e[1;33m\]\!\[\e[0;39m\]/\$(err_code=\$?; if [ \$err_code == 0 ] ; then echo \"\[\e[0;32m\]0\[\e[0;39m\]\" ;else echo \"\[\e[1;31m\]\$err_code\[\e[0;39m\]\"; fi)/\[\e[0;36m\]\$($DJBELL_BASE/bin/tt --prompt)\[\e[1;37m\]] \[\e[1;36m\]\u\[\e[1;37m\]@\[\e[0;36m\]\h\[\e[1;37m\] "
 PSgit="\[\e[0;35m\]\$(vcprompt)"
 PSrvm="${PSrvm:-}"
 PSprompt="\n\[\e[1;34m\]\w \[\e[1;37m\]∴\[\e[0;39m\] "
@@ -51,8 +52,13 @@ PStt="\$(tt --prompt) "
 
 type git >/dev/null 2>&1
 if [[ $? == 0 ]]; then
-  export PS0="$PSstatus%{[git@%[\e[1;34m%]%b%[\e[00m%]:%[\e[1;33m%]%i%[\e[00m%]%}%{%[\e[1;31m%]%c%u%f%t%[\e[00m%]]%} $PSrvm$PSprompt"
-  export PROMPT_COMMAND="${PROMPT_COMMAND}"';export PS1=$($HOME/bin/gitprompt c=\+ u=\* f=\? statuscount=1)'
+  bash_v="$(bash --version | grep 'GNU bash, version' | sed -e 's/.*version \([0-9]\).*/\1/')"
+  if [[ "$bash_v" == '4' ]]; then 
+    export PS00="$PSstatus%{[git@%[\e[1;34m%]%b%[\e[00m%]:%[\e[1;33m%]%i%[\e[00m%]%}%{%[\e[1;31m%]%c%u%f%t%[\e[00m%]]%} $PSrvm$PSprompt"
+  else
+    export PS0="$PSstatus%{[git@%[\e[1;34m%]%b%[\e[00m%]:%[\e[1;33m%]%i%[\e[00m%]%}%{%[\e[1;31m%]%c%u%f%t%[\e[00m%]]%} $PSrvm$PSprompt"
+  fi
+  export PROMPT_COMMAND="${PROMPT_COMMAND}"';export PS1=$($DJBELL_BASE/bin/gitprompt c=\+ u=\* f=\? statuscount=1)'
 else
   export PS1="$PSstatus$PSgit$PSrvm$PSprompt"
 fi
@@ -88,18 +94,18 @@ case $OSTYPE in
     initializer="linux";;
   esac;;
 esac
-[[ -f "$HOME/.bashrc.$initializer" ]] && source $HOME/.bashrc.$initializer
+[[ -f "$DJBELL_BASE/.bashrc.$initializer" ]] && source $DJBELL_BASE/.bashrc.$initializer
 
 # Load the general and localized custom initialization
-[[ -f "$HOME/.bashrc.custom" ]] && source $HOME/.bashrc.custom
-[[ -f "$HOME/.bashrc.local" ]]  && source $HOME/.bashrc.local
+[[ -f "$DJBELL_BASE/.bashrc.custom" ]] && source $DJBELL_BASE/.bashrc.custom
+[[ -f "$DJBELL_BASE/.bashrc.local" ]]  && source $DJBELL_BASE/.bashrc.local
 
 #Aliases files
-[[ -f "$HOME/.bashrc.aliases" ]] && source $HOME/.bashrc.aliases
-[[ -f "$HOME/.bashrc.aliases.$initializer" ]] && source $HOME/.bashrc.aliases.$initializer
+[[ -f "$DJBELL_BASE/.bashrc.aliases" ]] && source $DJBELL_BASE/.bashrc.aliases
+[[ -f "$DJBELL_BASE/.bashrc.aliases.$initializer" ]] && source $DJBELL_BASE/.bashrc.aliases.$initializer
 
 # Make sure home bin directory is the first thing in the path
-export PATH="$HOME/bin:$PATH"
+export PATH="$DJBELL_BASE/bin:$PATH"
 
 # Predictable SSH authentication socket location.
 SOCK="/tmp/ssh-agent-$USER-tmux"
@@ -111,7 +117,7 @@ then
 fi
 
 RVM_LATE_BINDING=1
-[[ -d "$HOME/.rvm/bin" ]] && [[ -f "$HOME/.bashrc.rvm" ]] && source $HOME/.bashrc.rvm
+[[ -d "$DJBELL_BASE/.rvm/bin" ]] && [[ -f "$DJBELL_BASE/.bashrc.rvm" ]] && source $DJBELL_BASE/.bashrc.rvm
 
 
 # -----------------------------------------------------------------------------
@@ -119,6 +125,6 @@ RVM_LATE_BINDING=1
 # -----------------------------------------------------------------------------
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+export PATH="$PATH:$DJBELL_BASE/.rvm/bin"
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f $DJBELL_BASE/.fzf.bash ] && source $DJBELL_BASE/.fzf.bash

@@ -55,7 +55,7 @@ bundle_data = {
 git_bundles = []
 bundle_data.each do |author, scripts|
   scripts.each do |name|
-    git_bundles << "git://github.com/#{author}/#{name}.git"
+    git_bundles << "https://github.com/#{author}/#{name}.git"
   end
 end
 

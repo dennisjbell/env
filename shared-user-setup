@@ -1,0 +1,24 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: shared.sh
+# 
+#         USAGE: ./shared.sh 
+# 
+#   DESCRIPTION: 
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: YOUR NAME (), 
+#  ORGANIZATION: 
+#       CREATED: 06/03/20 18:50
+#      REVISION:  ---
+#===============================================================================
+
+export VIMINIT='source $MYVIMRC'
+export MYVIMRC="$HOME/djbell-env/vimfiles/.vimrc"
+export DJBELL_BASE="$HOME/djbell-env"
+source $DJBELL_BASE/.bashrc
+
