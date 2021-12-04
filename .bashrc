@@ -24,9 +24,9 @@ export PATH="$DJBELL_BASE/bin:$PATH"
 # =============================================================================
 # History configuration
 # -----------------------------------------------------------------------------
-HISTSIZE=9000
+HISTSIZE=50000
 HISTFILESIZE=$HISTSIZE
-HISTCONTROL=ignoreboth # sam as 'ignorespace:ignoredups'
+HISTCONTROL=ignoredups # sam as 'ignorespace:ignoredups'
 
 _bash_history_sync() {
   builtin history -a         #1
@@ -49,18 +49,20 @@ PSgit="\[\e[0;35m\]\$(vcprompt)"
 PSrvm="${PSrvm:-}"
 PSprompt="\n\[\e[1;34m\]\w \[\e[1;37m\]∴\[\e[0;39m\] "
 PStt="\$(tt --prompt) "
+PSk8s="[\[\e[1;37m\]K8S:\[\e[0;33m\]\$(kubens -c)\[\e[1;33m\]@\[\e[1;32m\]\$(kubectx -c)\[\e[0m\]] "
+#[[ -n $K8S_PROMPT ]] || PSk8s=''
 
 type git >/dev/null 2>&1
 if [[ $? == 0 ]]; then
   bash_v="$(bash --version | grep 'GNU bash, version' | sed -e 's/.*version \([0-9]\).*/\1/')"
   if [[ "$bash_v" == '4' ]]; then 
-    export PS00="$PSstatus%{[git@%[\e[1;34m%]%b%[\e[00m%]:%[\e[1;33m%]%i%[\e[00m%]%}%{%[\e[1;31m%]%c%u%f%t%[\e[00m%]]%} $PSrvm$PSprompt"
+    export PS00="$PSstatus%{[git@%[\e[1;34m%]%b%[\e[00m%]:%[\e[1;33m%]%i%[\e[00m%]%}%{%[\e[1;31m%]%c%u%f%t%[\e[00m%]]%}$PSk8s$PSrvm$PSprompt"
   else
-    export PS0="$PSstatus%{[git@%[\e[1;34m%]%b%[\e[00m%]:%[\e[1;33m%]%i%[\e[00m%]%}%{%[\e[1;31m%]%c%u%f%t%[\e[00m%]]%} $PSrvm$PSprompt"
+    export PS0="$PSstatus%{[git@%[\e[1;34m%]%b%[\e[00m%]:%[\e[1;33m%]%i%[\e[00m%]%}%{%[\e[1;31m%]%c%u%f%t%[\e[00m%]]%}$PSk8s$PSrvm$PSprompt"
   fi
   export PROMPT_COMMAND="${PROMPT_COMMAND}"';export PS1=$($DJBELL_BASE/bin/gitprompt c=\+ u=\* f=\? statuscount=1)'
 else
-  export PS1="$PSstatus$PSgit$PSrvm$PSprompt"
+  export PS1="$PSstatus$PSgit$PSk8s$PSrvm$PSprompt"
 fi
 # -----------------------------------------------------------------------------
 
@@ -128,3 +130,7 @@ RVM_LATE_BINDING=1
 export PATH="$PATH:$DJBELL_BASE/.rvm/bin"
 
 [ -f $DJBELL_BASE/.fzf.bash ] && source $DJBELL_BASE/.fzf.bash
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

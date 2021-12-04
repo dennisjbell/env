@@ -5,6 +5,7 @@
 [alias]
   co = checkout
   ci = commit
+  cp = cherry-pick
   st = status
   br = branch -vv
   history = log --pretty=oneline --abbrev-commit --graph --decorate
@@ -13,13 +14,16 @@
   dump = cat-file -p
   hist = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr by %an)%Creset' --abbrev-commit --date=relative 
 	oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | sed -ne \"s/^ //p\" | head -1' -
-	bd = !sh -c \"git diff `git oldest-ancestor`..\"
-	bl = !sh -c \"git hist `git oldest-ancestor`^..\"
+	bd = !sh -c \"git diff `git oldest-ancestor $1 $2`..\"
+	bh = !sh -c \"git hist `git oldest-ancestor $1 $2`..\"
+  bl = !sh -c \"git log `git oldest-ancestor $1 $2`..\"
+  bc = !sh -c \"git log -p --reverse `git oldest-ancestor $1 $2`..\"
   diverged = !sh -c \"git log `git oldest-ancestor` --decorate --abbrev-commit -1\"
 [mergetool]
 	keepBackup = true
 [core]
-	excludesfile = ~/.gitignore
+  excludesfile = ~/.gitignore
+  pager = less -x4
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 

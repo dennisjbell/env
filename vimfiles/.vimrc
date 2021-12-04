@@ -123,7 +123,8 @@ let g:slime_target = "tmux"
 
 " Ruby
 if v:version >= 801
-  set rubydll=/Users/dbell/.rvm/rubies/ruby-2.4.1/lib/libruby.2.4.1.dylib
+  "set rubydll=/Users/dbell/.rvm/rubies/ruby-2.4.1/lib/libruby.2.4.1.dylib
+  set rubydll=/Users/dbell/.rvm/rubies/ruby-2.6.1/lib/libruby.2.6.dylib
 endif
 
 " Rails
@@ -176,6 +177,10 @@ au FileType perl                                     set noexpandtab
 au FileType make                                     set noexpandtab
 au FileType python                                   set noexpandtab
 
+" add yaml stuffs
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent foldlevel=999
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
 " Thorfile, Rakefile and Gemfile are Ruby
 au BufRead,BufNewFile {Gemfile,Rakefile,Thorfile,config.ru}    set ft=ruby
 
@@ -184,6 +189,9 @@ au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkup()
 
 au BufRead,BufNewFile *.txt call s:setupWrapping()
 au BufRead,BufNewFile {README,Readme} call s:setupWrapping()
+
+" Turn on spelling for git commits
+autocmd FileType gitcommit setlocal spell
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -208,6 +216,10 @@ let g:indentLine_char = '⦙'
 let g:ale_linters = {'perl': ['perl']}
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_sign_column_always = 0
+let g:ale_perl_perl_options = '-c -Mwarnings -Ilib'
+if isdirectory("./site_perl")
+  let g:ale_perl_perl_options .= ' -Isite_perl'
+endif
 
 " Airline
 let g:airline#extensions#ale#enabled = 1
@@ -217,3 +229,10 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='jay'
 nmap <silent> <M-S-tab> <Plug>(ale_previous_wrap)
 nmap <silent> <M-tab>   <Plug>(ale_next_wrap)
+
+" Deoplete
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#go#gocode_binary = '/Users/dbell/lib/go/bin/gocode'
+let g:deoplete#sources#go#builtin_objects = 1
+
+iabbrev mypry `cp /Users/dbell/.replyrc \$HOME/` unless -f $ENV{HOME}."/.replyrc"; use Pry; pry;

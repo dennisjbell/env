@@ -122,8 +122,8 @@ gogit() {
   # Check we got it all
   if [[ -z "$host" ]] 
   then
-    echo "Host cannot be determined from path and was not provided"
-    return 1
+    host="github.com"
+    echo "Host cannot be determined from path and was not provided - assuming github.com"
   elif [[ -z "$org" ]]
   then
     echo "Organization cannot be determined from path and was not provided"
@@ -146,9 +146,15 @@ gogit() {
   else
     host_connect="git@${host}:"
   fi
-  echo ">" git clone "${host_connect}${org}/${repo}" .
-  git clone "${host_connect}${org}/${repo}" .
-  goco $PWD
+  if [[ -d .git ]] ; then
+    echo "Repository exists, refreshing from upstream..."
+    echo ">" git fetch --all
+    git fetch --all
+  else
+    echo "Cloning from upstream..."
+    echo ">" git clone "${host_connect}${org}/${repo}" .
+    git clone "${host_connect}${org}/${repo}" .
+  fi
 }
 
 alias ls="\ls -aFG"
@@ -311,3 +317,8 @@ contains() {
   return 1
 }
 
+alias ppry="perl -Ilib -MPry -e 'pry;'"
+
+Files() {
+  diff "$1" "$3"
+}

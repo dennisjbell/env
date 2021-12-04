@@ -1,6 +1,6 @@
 " GUI Scheme
 "set guifont=Anonymice\ Nerd\ Font\ Complete\ Mono:h17
-set guifont=RobotoMonoForPowerline-Light:h15
+set guifont=RobotoMonoForPowerline-Light:h17
 set mousehide
 set transparency=0 " was 12
 set noequalalways
@@ -41,7 +41,7 @@ set listchars=tab:⦙\ ,trail:∙,extends:⊳,precedes:⊲,nbsp:◦
 set listchars+=eol:⤸ "if you want to see EOLs
 let g:indentLine_color_gui = '#A4E57E'
 
-let g:NERDTreeIndicatorMapCustom = {
+let g:NERDTreeGitStatusIndicatorMapCustom = {
             \ 'Modified'  : '∗',
             \ 'Staged'    : '+',
             \ 'Untracked' : '?',

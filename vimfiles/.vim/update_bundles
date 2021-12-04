@@ -7,7 +7,11 @@ bundle_data = {
   :"vim-ruby" => %w[vim-ruby],
   :"vim-scripts" => %w[AutoTag bash-support.vim jQuery matchit.zip Gist.vim IndexedSearch Color-Sampler-Pack ColorSchemeMenuMaker ScrollColors xterm16.vim netrw.vim ZoomWin],
   :tpope => %w[vim-cucumber vim-fugitive vim-git vim-haml vim-markdown vim-repeat vim-unimpaired vim-surround vim-vividchalk],
+#  :roxma => %w[vim-hug-neovim-rpc nvim-yarp],
+  :xolox => %w[vim-misc vim-easytags],
+  #:shougo => %w[deoplete.nvim],
   :RubidiumStudios => %w[vim-rails],
+  :chiedo => %w[vim-case-convert],
   :rhysd => %w[vim-crystal],
   :jpalardy => %w[vim-slime],
   :lucapette => %w[vim-jquery-doc vim-ruby-doc],
@@ -18,13 +22,14 @@ bundle_data = {
   :scrooloose => %w[nerdtree nerdcommenter snipmate-snippets],
   :jistr => %w[vim-nerdtree-tabs],
   :Xuyuanp => %w[nerdtree-git-plugin],
+#  :airblade => %w[vim-gitgutter],
   :timcharper => %w[textile.vim],
   :mileszs => %w[ack.vim],
 #  :suan => %w[vim-instant-markdown],
   :reinh => %w[vim-makegreen],
   :fatih => %w[vim-go],
+  #:zchee => %w[deoplete-go],
   :lmeijvogel => %w[vim-yaml-helper],
-#  :Shougo =>%w[neocomplete],
   :wincent => %w[Command-T],
   :w0rp => %w[ale],
   :"vim-airline" => %w[vim-airline vim-airline-themes],
@@ -88,8 +93,8 @@ Dir.chdir(bundles_dir) do
     dir = File.basename(url, '.git')
     label = "  [#{dir}]".ljust(18)
     $stderr.puts "#{label} -> #{url}"
-    `git clone -q #{url} #{dir}`
-    FileUtils.rm_rf(File.join(dir, ".git"))
+    `git clone --depth 1 -q #{url} #{dir}`
+    #FileUtils.rm_rf(File.join(dir, ".git"))
     dos2unix dir
   end
 end
@@ -106,6 +111,11 @@ if have_rvm && vim_version >= 8.1
   dll = `find $MY_RUBY_HOME -name '*.dylib' -type f | head -n1`.chomp
   system 'sed -e \'s|^\( *\)set rubydll.*|\1set rubydll='+dll+'|\' -i "" '+File.realpath("#{ENV['HOME']}/.vimrc")
 end
+
+# zchee/deoplete-go
+#Dir.chdir(File.join(bundles_dir,"deoplete-go")) do
+#  system "make"
+#end
 
 
 # Special handling for scrooloose's snippets -- need to move into a snippets subdirectory to work 
