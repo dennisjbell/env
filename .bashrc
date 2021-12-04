@@ -54,7 +54,7 @@ PSrvm="${PSrvm:-}"
 PSprompt="\n\[\e[1;34m\]\w \[\e[1;37m\]∴\[\e[0;39m\] "
 PStt="\$(tt --prompt) "
 PSk8s="[\[\e[1;37m\]K8S:\[\e[0;33m\]\$(kubens -c)\[\e[1;33m\]@\[\e[1;32m\]\$(kubectx -c)\[\e[0m\]] "
-#[[ -n $K8S_PROMPT ]] || PSk8s=''
+command kubens &> /dev/null && command kubectx &> /dev/null  || PSk8s=''
 
 type git >/dev/null 2>&1
 if [[ $? == 0 ]]; then

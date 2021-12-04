@@ -16,5 +16,8 @@ dict() {
   open "dict://$1"
 }
 
+# Suppress "Thou shall use zsh!" message
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
 # Brew bash_completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
