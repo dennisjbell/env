@@ -4,7 +4,11 @@
 
 # Don't source twice...
 type _bash_history_sync > /dev/null 2>&1 && return
-[[ -n "$DJBELL_BASE" ]] && export DJBELL_BASE="$DJBELL_BASE"
+if [[ -n "$DJBELL_BASE" ]] ; then
+  export DJBELL_BASE="$DJBELL_BASE"
+else
+  export DJBELL_BASE="$HOME"
+fi
 
 # PATH
 export PATH="$DJBELL_BASE/bin:$PATH"
