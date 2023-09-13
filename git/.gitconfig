@@ -38,3 +38,7 @@
   helper = cache --timeout=3600000
 [http]
   sslverify = false
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main
