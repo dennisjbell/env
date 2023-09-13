@@ -124,7 +124,7 @@ let g:slime_target = "tmux"
 " Ruby
 if v:version >= 801
   "set rubydll=/Users/dbell/.rvm/rubies/ruby-2.4.1/lib/libruby.2.4.1.dylib
-  set rubydll=/Users/dbell/.rvm/rubies/ruby-2.6.1/lib/libruby.2.6.dylib
+  set rubydll=/Users/dennis.bell/.rvm/rubies/ruby-3.1.2/lib/libruby.3.1.dylib
 endif
 
 " Rails
@@ -154,9 +154,9 @@ autocmd BufWinEnter * NERDTreeMirror
 "let g:neocomplete#enable_at_startup = 1
 
 " Command-T configuration
-let g:CommandTMaxHeight=20
-nmap <C-L> :CommandT<CR>
-imap <C-L> <ESC>:CommandT<CR>
+"let g:CommandTMaxHeight=20
+"nmap <C-L> :CommandT<CR>
+"imap <C-L> <ESC>:CommandT<CR>
 
 function s:setupWrapping()
   set ft=text
@@ -178,8 +178,13 @@ au FileType make                                     set noexpandtab
 au FileType python                                   set noexpandtab
 
 " add yaml stuffs
-au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent foldlevel=999
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldlevelstart=50
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+let g:ale_lint_on_text_changed = 'always'
 
 " Thorfile, Rakefile and Gemfile are Ruby
 au BufRead,BufNewFile {Gemfile,Rakefile,Thorfile,config.ru}    set ft=ruby

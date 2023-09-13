@@ -5,16 +5,14 @@ require 'open-uri'
 
 bundle_data = {
   :"vim-ruby" => %w[vim-ruby],
-  :"vim-scripts" => %w[AutoTag bash-support.vim jQuery matchit.zip Gist.vim IndexedSearch Color-Sampler-Pack ColorSchemeMenuMaker ScrollColors xterm16.vim netrw.vim ZoomWin],
+  :"vim-scripts" => %w[AutoTag bash-support.vim jQuery matchit.zip Gist.vim IndexedSearch Color-Sampler-Pack ScrollColors xterm16.vim netrw.vim ZoomWin],
+  :dennisjbell => %w[ColorSchemeMenuMaker], # Patched from vim-scripts: https://github.com/vim-scripts/ColorSchemeMenuMaker/pull/1
   :tpope => %w[vim-cucumber vim-fugitive vim-git vim-haml vim-markdown vim-repeat vim-unimpaired vim-surround vim-vividchalk],
-#  :roxma => %w[vim-hug-neovim-rpc nvim-yarp],
   :xolox => %w[vim-misc vim-easytags],
-  #:shougo => %w[deoplete.nvim],
   :RubidiumStudios => %w[vim-rails],
   :chiedo => %w[vim-case-convert],
   :rhysd => %w[vim-crystal],
   :jpalardy => %w[vim-slime],
-  :lucapette => %w[vim-jquery-doc vim-ruby-doc],
   :astashov => %w[vim-ruby-debugger],
   :kchmck => %w[vim-coffee-script],
   :msanders => %w[snipmate.vim],
@@ -22,39 +20,40 @@ bundle_data = {
   :scrooloose => %w[nerdtree nerdcommenter snipmate-snippets],
   :jistr => %w[vim-nerdtree-tabs],
   :Xuyuanp => %w[nerdtree-git-plugin],
-#  :airblade => %w[vim-gitgutter],
   :timcharper => %w[textile.vim],
   :mileszs => %w[ack.vim],
 #  :suan => %w[vim-instant-markdown],
   :reinh => %w[vim-makegreen],
   :fatih => %w[vim-go],
-  #:zchee => %w[deoplete-go],
   :lmeijvogel => %w[vim-yaml-helper],
-  :wincent => %w[Command-T],
+  :ctrlpvim =>%w[ctrlp.vim],
   :w0rp => %w[ale],
   :"vim-airline" => %w[vim-airline vim-airline-themes],
+  :pedrohdz => %w[vim-yaml-folds],
 #  :wakatime => %w[vim-wakatime],
 #  :Yggdroot => %w[indentLine],
 
   # Colorschemes - from vimcolors.com
-  :Addisonbean => %w[Vim-Xcode-Theme],
-  :GertjanReynaert => %w[cobalt2-vim-theme],
-  :YorickPeterse => %w[happy_hacking.vim],
-  :albertocg => %w[contrastneed-theme],
-  :atelierbram => %w[vim-colors_atelier-schemes vim-colors_duotones],
-  :bounceme => %w[base.vim],
+  # :Addisonbean => %w[Vim-Xcode-Theme],
+  # :GertjanReynaert => %w[cobalt2-vim-theme],
+  # :YorickPeterse => %w[happy_hacking.vim],
+  # :albertocg => %w[contrastneed-theme],
+  # :atelierbram => %w[vim-colors_atelier-schemes vim-colors_duotones],
+  # :bounceme => %w[base.vim],
   :encody => %w[vim-colors],
-  :gryftir => %w[gryffin],
-  :josuegaleas => %w[jay],
-  :lifepillar => %w[vim-solarized8],
-  :marciomazza => %w[vim-brogrammer-theme],
-  :marcopaganini => %w[termschool-vim-theme],
-  :mkarmona => %w[colorsbox],
-  :rakr => %w[vim-one],
-  :roosta => %w[vim-srcery],
-  :the31k => %w[vim-colors-tayra],
-  :tyrannicaltoucan => %w[vim-deep-space],
-  :wellsjo => %w[wellsokai.vim],
+  # :gryftir => %w[gryffin],
+  # :josuegaleas => %w[jay],
+  # :lifepillar => %w[vim-solarized8],
+  # :marciomazza => %w[vim-brogrammer-theme],
+  # :marcopaganini => %w[termschool-vim-theme],
+  # :mkarmona => %w[colorsbox],
+  # :rakr => %w[vim-one],
+  # :roosta => %w[vim-srcery],
+  # :the31k => %w[vim-colors-tayra],
+  # :tyrannicaltoucan => %w[vim-deep-space],
+  # :wellsjo => %w[wellsokai.vim],
+  :flazz => %w[vim-colorschemes],
+
 }
 
 git_bundles = []
@@ -81,7 +80,7 @@ end
 # Install pathogen if its missing
 autoload_dir = File.join(File.dirname(__FILE__), "autoload")
 FileUtils.mkdir_p(autoload_dir) unless File.directory?(autoload_dir)
-`curl -so #{autoload_dir}/pathogen.vim https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim` if (!File.exists?(File.join(autoload_dir,'pathogen.vim')) or ARGV.include? '--force')
+`curl -so #{autoload_dir}/pathogen.vim https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim` if (!File.exist?(File.join(autoload_dir,'pathogen.vim')) or ARGV.include? '--force')
 
 # Install the bundles
 bundles_dir = File.join(File.dirname(__FILE__), "bundle")
@@ -103,26 +102,12 @@ end
 vim_version = (/.* ([\d]*\.[\d]*) \(.*/.match(`vim --version | head -n1`)[1] || 0).to_f
 have_rvm = `rvm > /dev/null 2>&1` && $?.exitstatus == 0 && !!ENV['MY_RUBY_HOME'];
 cmd = (have_rvm && vim_version < 8.1) ? "rvm system ruby extconf.rb" : "/usr/bin/env ruby extconf.rb"
-Dir.chdir(File.join(bundles_dir,"Command-T","ruby/command-t/ext/command-t")) do
-  system cmd
-  system "make clean && make"
-end
+#Dir.chdir(File.join(bundles_dir,"Command-T","ruby/command-t/ext/command-t")) do
+#  system cmd
+#  system "make clean && make"
+#end
 if have_rvm && vim_version >= 8.1
   dll = `find $MY_RUBY_HOME -name '*.dylib' -type f | head -n1`.chomp
   system 'sed -e \'s|^\( *\)set rubydll.*|\1set rubydll='+dll+'|\' -i "" '+File.realpath("#{ENV['HOME']}/.vimrc")
 end
-
-# zchee/deoplete-go
-#Dir.chdir(File.join(bundles_dir,"deoplete-go")) do
-#  system "make"
-#end
-
-
-# Special handling for scrooloose's snippets -- need to move into a snippets subdirectory to work 
-# currently disabled because of conflicts
-#Dir.chdir(File.join(bundles_dir,"snipmate-snippets")) do
-  #FileUtils.mkdir('snippets')
-  #FileUtils.rm('Rakefile')
-  #system 'find . \! -name snippets \! -name "." -maxdepth 1 -exec mv {} snippets \;'
-#end
 
