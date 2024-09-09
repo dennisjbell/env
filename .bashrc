@@ -59,7 +59,9 @@ PSk8s="[\[\e[1;37m\]K8S:\[\e[0;33m\]\$(kubens -c)\[\e[1;33m\]@\[\e[1;32m\]\$(kub
 type git >/dev/null 2>&1
 if [[ $? == 0 ]]; then
   echo "Bash Version: $BASH_VERSION"
+  bash_v="${BASH_VERSION%%.*}"
   if [[ "$bash_v" -ge 4 ]]; then 
+    unset PS0
     export PS00="$PSstatus%{[git@%[\e[1;34m%]%b%[\e[00m%]:%[\e[1;33m%]%i%[\e[00m%]%}%{%[\e[1;31m%]%c%u%f%t%[\e[00m%]]%}$PSk8s$PSrvm$PSprompt"
   else
     export PS0="$PSstatus%{[git@%[\e[1;34m%]%b%[\e[00m%]:%[\e[1;33m%]%i%[\e[00m%]%}%{%[\e[1;31m%]%c%u%f%t%[\e[00m%]]%}$PSk8s$PSrvm$PSprompt"

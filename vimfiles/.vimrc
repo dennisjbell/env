@@ -144,6 +144,7 @@ map <Leader>z :ZoomWin<CR>
 let g:NERDTreeWinSize=20
 let NERDTreeIgnore=['\.rbc$', '\~$', '^\..*\.sw.$']
 let NERDTreeShowHidden=1
+let NERDTreeSortOrder=[]
 nmap <C-E> :NERDTreeTabsToggle<CR>
 nmap <C-^> :NERDTreeFind<CR>
 "autocmd VimEnter * NERDTree
@@ -240,4 +241,29 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#go#gocode_binary = '/Users/dbell/lib/go/bin/gocode'
 let g:deoplete#sources#go#builtin_objects = 1
 
-iabbrev mypry `cp /Users/dbell/.replyrc \$HOME/` unless -f $ENV{HOME}."/.replyrc"; use Pry; pry;
+iabbrev mypry `cp /Users/dennis.bell/.replyrc \$HOME/` unless -f $ENV{HOME}."/.replyrc"; use Pry; pry;
+
+let g:easytags_cmd = '/opt/homebrew/bin/ctags'
+
+let g:rgbtxt = '/Users/dennis.bell/.vim/rgb.txt'
+
+let g:copilot_filetypes = {
+    \ 'gitcommit': v:true,
+    \ 'markdown': v:true,
+    \ 'yaml': v:true,
+    \ 'perl': v:true,
+    \ 'ruby': v:true,
+    \ 'javascript': v:true,
+    \ 'typescript': v:true,
+    \ 'html': v:true,
+    \ 'css': v:true,
+    \ 'scss': v:true,
+    \ 'go': v:true,
+    \ }
+
+let g:copilot_auto_enable = 1
+imap <D-[> <Plug>(copilot-prev)
+imap <D-]> <Plug>(copilot-next)
+imap <D-'> <Plug>(copilot-suggest)
+imap <C-Tab> <Plug>(copilot-accept-line)
+imap <C-Space> <Plug>(copilot-accept-word)
