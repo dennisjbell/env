@@ -1,1 +1,8 @@
 vimfiles/.vim/bundle/*
+
+# Vim machine-local state
+vimfiles/.vim/.netrwhist
+vimfiles/.vim/.VimballRecord
+
+# 2021 snapshot of third-party plugins - not for publication
+vimfiles/.vim/bundle-backup/
