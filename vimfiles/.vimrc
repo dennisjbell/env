@@ -179,7 +179,7 @@ au FileType make                                     set noexpandtab
 au FileType python                                   set noexpandtab
 
 " add yaml stuffs
-au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldlevelstart=50
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldlevel=99
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'

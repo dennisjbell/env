@@ -42,7 +42,6 @@ bundle_data = {
   # :albertocg => %w[contrastneed-theme],
   # :atelierbram => %w[vim-colors_atelier-schemes vim-colors_duotones],
   # :bounceme => %w[base.vim],
-  :encody => %w[vim-colors],
   # :gryftir => %w[gryffin],
   # :josuegaleas => %w[jay],
   # :lifepillar => %w[vim-solarized8],
@@ -54,6 +53,7 @@ bundle_data = {
   # :the31k => %w[vim-colors-tayra],
   # :tyrannicaltoucan => %w[vim-deep-space],
   # :wellsjo => %w[wellsokai.vim],
+  :encody => %w[vim-colors],
   :flazz => %w[vim-colorschemes],
 
 }
