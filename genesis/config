@@ -1,0 +1,23 @@
+---
+embedded_genesis: ignore # use, check, ignore
+output_style: fun
+default_bosh_target: self
+deployment_roots:
+- lab-ops: /ops/
+
+show_duration: true
+
+confirm_release_overrides: outdated
+
+suppress_warnings:
+  bosh_target: true
+  oversized_secrets: true
+
+logs:
+- file: ~/.genesis/logs/last-trace
+  level: TRACE
+  show_stack: full # none current full
+  truncate: false
+  style: fun #rfc-5424
+  lifespan: 1
+  timestamp: true
