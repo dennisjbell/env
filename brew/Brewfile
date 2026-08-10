@@ -1,0 +1,120 @@
+# Baseline macOS toolchain for these dotfiles.
+#
+# This file is CURATED, not a dump. Two deliberate omissions:
+#
+#   1. Transitive dependencies. brew resolves those itself; listing them just
+#      makes the file churn. (A full snapshot, for reference, would be roughly
+#      three times this length.)
+#   2. Language runtimes owned by a version manager. ruby is rvm's, node is
+#      nvm's, perl is perlbrew's, rust is rustup's, and python is uv's. Brew
+#      still installs its own python@3.x as a dependency of other formulae --
+#      that copy is for brew's use, not for development, and should not be
+#      added here.
+#
+# Homebrew 6+ refuses to load formulae from untrusted taps, which silently
+# excludes them from `brew bundle dump`. setup.sh runs `brew trust` for the
+# taps below before installing; to do it by hand:
+#     brew trust cloudfoundry-community/cf cloudfoundry/tap hashicorp/tap oven-sh/bun atlassian/acli
+
+tap "cloudfoundry-community/cf", "https://github.com/cloudfoundry-community/homebrew-cf.git"
+tap "cloudfoundry/tap"
+tap "hashicorp/tap"
+tap "oven-sh/bun"
+tap "atlassian/acli"
+
+# --- Shell and core CLI ------------------------------------------------------
+brew "bash"                   # 5.x; macOS still ships 3.2
+brew "bash-completion"
+brew "coreutils"              # GNU userland; .bashrc.linux assumes GNU flags
+brew "gnu-tar"
+brew "ack"
+brew "the_silver_searcher"    # ag
+brew "bat"                    # aliased over cat in .bashrc.custom
+brew "tree"
+brew "watch"
+brew "htop"
+brew "pstree"
+brew "wget"
+brew "fswatch"
+brew "gnupg"                  # also required by the rvm installer's signature check
+brew "jq"                     # called directly by gho-clone()
+brew "ijq"
+brew "gron"
+brew "glow"
+brew "gum"
+brew "aha"
+brew "yamllint"
+brew "shellcheck"
+brew "ctags"
+brew "tmate"
+brew "sipcalc"
+brew "iproute2mac"
+
+# --- Git ---------------------------------------------------------------------
+brew "gh"
+brew "tig"
+brew "git-filter-repo"
+
+# --- Editors -----------------------------------------------------------------
+# macvim is REQUIRED: .bashrc.macosx aliases vim='mvim -v' and .bashrc.local
+# sets EDITOR="mvim -f", so without it there is no working vim at all.
+# Conflicts with the `vim` formula -- both install vi* binaries. Do not add vim.
+brew "macvim"
+# neovim is listed explicitly: it is currently only a dependency of the two
+# GUIs, so dropping them would silently take the editor with it.
+brew "neovim"
+brew "neovide"
+brew "neovim-qt"
+
+# --- Platform / work tooling -------------------------------------------------
+# NOTE: genesis is deliberately absent. It is installed by hand, in several
+# versions side by side -- do not add it back, and do not let `brew bundle
+# dump` reintroduce it.
+brew "cloudfoundry-community/cf/safe"
+brew "cloudfoundry-community/cf/spruce"
+# openbao, not hashicorp/tap/vault: the OpenSSF fork from Vault's pre-BUSL
+# point, MPL-2.0 and still maintained. homebrew/core's own `vault` formula is
+# deprecated and frozen at 1.14.x; hashicorp's tap is BUSL and now 2.x.
+# NOTE: the binary is `bao`, not `vault`.
+brew "openbao"
+# NOTE: do not add `brew "vault"`. HashiCorp's vault was REMOVED from
+# homebrew/core after the BUSL relicense, so the bare name now resolves to
+# hashicorp/tap's BUSL 2.x build. There is no MPL vault available via brew.
+# The last MPL release (1.14.4) is installed by setup.sh straight from
+# releases.hashicorp.com instead.
+brew "hashicorp/tap/terraform"
+brew "bosh-cli"
+brew "cloudfoundry-cli"
+# Required by `genesis ping -D`'s dependency check (>= 2.7.0). Was previously a
+# hand-installed binary in ~/bin, so a fresh machine had no credhub at all.
+brew "cloudfoundry/tap/credhub-cli"
+# Also a genesis requirement (>= 1.1.1). Present only as a transitive dep until
+# now; made explicit so it cannot vanish when whatever pulled it in goes away.
+brew "openssl@3"
+brew "kustomize"
+brew "dive"
+brew "awscli"
+brew "aws-vault"
+brew "googleworkspace-cli"
+brew "atlassian/acli/acli"
+
+# --- Languages ---------------------------------------------------------------
+# go manages its own toolchain versions via GOTOOLCHAIN (go.mod-directed), so
+# one brew-installed go is enough. uv installs and pins Python per project.
+brew "go"
+brew "uv"
+brew "oven-sh/bun/bun"
+
+# --- Build -------------------------------------------------------------------
+brew "cmake"
+
+# --- Databases ---------------------------------------------------------------
+brew "redis"
+brew "postgresql@15"
+brew "mysql"
+
+# --- Casks -------------------------------------------------------------------
+cask "gcloud-cli"
+cask "macdown"
+cask "redis-insight"
+cask "snowflake-snowsql"
