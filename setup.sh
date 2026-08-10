@@ -146,6 +146,25 @@ else
       warn "Some Brewfile entries failed; re-run 'brew bundle install --file=${basedir}/brew/Brewfile'"
   fi
 
+  # --- GitHub CLI auth ------------------------------------------------------
+  # gh itself is installed from the Brewfile; this is only about its keyring.
+  # ~/.bashrc.local sets GITHUB_AUTH_TOKEN="$(gh auth token)", and genesis
+  # reads that variable directly (Service/Github.pod). Unauthenticated it does
+  # not fail -- it silently drops to 60 API requests/hr instead of 5000.
+  #
+  # `gh auth login` needs a browser and a TTY, so it cannot be scripted: run it
+  # when someone is watching, otherwise just say what is missing.
+  if ! have gh ; then
+    warn "gh not on PATH - skipping auth check"
+  elif gh auth status > /dev/null 2>&1 ; then
+    echo "gh: already authenticated ($(gh api user --jq .login 2>/dev/null))"
+  elif [ -t 0 ] ; then
+    echo "gh: not authenticated - launching 'gh auth login'..."
+    gh auth login || warn "gh auth login failed; re-run it by hand"
+  else
+    warn "gh is not authenticated: run 'gh auth login' or genesis stays capped at 60 API req/hr"
+  fi
+
   # --- perlbrew -------------------------------------------------------------
   if [[ -d "$HOME/perl5/perlbrew" ]] || have perlbrew ; then
     echo "perlbrew: already installed"
