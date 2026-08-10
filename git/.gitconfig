@@ -1,6 +1,6 @@
 [user]
-	name = Dennis Bell
-	email = dennis.j.bell@gmail.com
+  name = Dennis J. Bell
+  email = dennis.j.bell@gmail.com
 
 [alias]
   co = checkout
@@ -12,13 +12,32 @@
   wip = log --branches --not --remotes --simplify-by-decoration --decorate --oneline
   type = cat-file -t
   dump = cat-file -p
-  hist = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr by %an)%Creset' --abbrev-commit --date=relative 
+  hist = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr by %an)%Creset' --abbrev-commit --date=relative
 	oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | sed -ne \"s/^ //p\" | head -1' -
 	bd = !sh -c \"git diff `git oldest-ancestor $1 $2`..\"
 	bh = !sh -c \"git hist `git oldest-ancestor $1 $2`..\"
   bl = !sh -c \"git log `git oldest-ancestor $1 $2`..\"
   bc = !sh -c \"git log -p --reverse `git oldest-ancestor $1 $2`..\"
   diverged = !sh -c \"git log `git oldest-ancestor` --decorate --abbrev-commit -1\"
+  ai-commit = "!f() { \
+    DIFF=$(git diff --cached); \
+    if [ -z \"$DIFF\" ]; then \
+      echo 'No staged changes found. Running interactive staging...'; \
+      git add -p; \
+      DIFF=$(git diff --cached); \
+      if [ -z \"$DIFF\" ]; then \
+        echo 'No staged changes'; \
+        exit 1; \
+      fi; \
+    fi; \
+    echo 'Generating AI commit message...'; \
+    PROMPT='Generate a git commit message following this exact format:\\n\\n<First line short summary not exceeding 50 characters>\\n<blank line>\\n<title: [BREAKING CHANGES|New Features|Improvements|Bug Fixes|Documentation|<best guess at change type>] - include the brackets around the title>\\n\\n- <bullet form summary of changes: include functional changes, benefits, and any user-facing interface changes required>\\n\\n<any internal changes (ie testing, whitespace, non-functional, removal of isolated code, etc) can be listed, with a --- line proceeding it.'; \
+    MSG=$(echo \"$DIFF\" | claude --print \"$PROMPT\"); \
+    git commit -v --edit -m \"$MSG\"; \
+  }; f"
+	retag = "!f() { tag=\"${1:?Tag name required}\"; commit=\"${2:-HEAD}\"; git tag -f -a \"$tag\" \"$commit\" -m \"$(git tag -l --format='%(contents)' \"$tag\")\"; }; f"
+	stash-applied = "!f() { stash=\"${1:-stash@{0}}\"; echo \"Checking if changes from $stash are applied:\"; if git apply --check \"$stash\" 2>/dev/null; then echo \"✗ Stash changes NOT applied (would apply cleanly)\"; else if git stash show -p \"$stash\" | git apply --reverse --check 2>/dev/null; then echo \"✓ Stash changes ARE applied (reverse applies cleanly)\"; else echo \"? Stash changes partially applied or conflicts exist\"; fi; fi; }; f"
+	stash-diff = "!f() { stash=\"${1:-stash@{0}}\"; echo \"Comparing changes from $stash with current state:\"; echo; if git apply --check \"$stash\" 2>/dev/null; then echo \"✗ All stash changes NOT applied:\"; git stash show -p \"$stash\"; elif git stash show -p \"$stash\" | git apply --reverse --check 2>/dev/null; then echo \"✓ All stash changes ARE applied (no diff to show)\"; else echo \"⚠ Partial/conflicting changes - showing what would happen:\"; echo; echo \"--- Trying to apply stash (conflicts/already applied parts):\"; git apply --check \"$stash\" 2>&1 || true; echo; echo \"--- Trying reverse apply (missing parts):\"; git stash show -p \"$stash\" | git apply --reverse --check 2>&1 || true; echo; echo \"--- Full stash patch for reference:\"; git stash show -p \"$stash\"; fi; }; f"
 [mergetool]
 	keepBackup = true
 [core]
@@ -26,7 +45,7 @@
   pager = less -x4
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+	path =
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
@@ -42,3 +61,8 @@
 	rebase = true
 [init]
 	defaultBranch = main
+
+# Machine-local overrides and per-client identities (untracked).
+# Put [includeIf "gitdir:..."] blocks here rather than in this file.
+[include]
+  path = ~/.gitconfig.local
