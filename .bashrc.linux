@@ -1,0 +1,30 @@
+# This should only be run by .bashrc.interactive on Linux (linux*|gnu*) systems.
+# It is the generic tier: it loads on EVERY Linux distro, and a distro-specific
+# .bashrc.<id> (matching ID from /etc/os-release) is sourced on top of it.
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+shopt -s globstar
+
+# Colour support. .bashrc.interactive already runs a bare `dircolors` and
+# aliases ls; redo it here so a user-supplied ~/.dircolors is honoured, and
+# add the aliases GNU coreutils/grep support but BSD/macOS does not.
+if [ -x /usr/bin/dircolors ]; then
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  alias ls='ls --color=auto -aF'
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
+fi
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'

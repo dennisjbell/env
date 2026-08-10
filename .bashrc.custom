@@ -13,6 +13,11 @@ export EDITOR=vim
 alias vi='\vim'
 alias :e="$EDITOR"
 
+# Docker
+alias d=docker
+alias dc=docker-compose
+
+
 removehost() {
   ssh-keygen -R $(head -$1 ~/.ssh/known_hosts | tail -1 | awk '{print $1}' | sed -e 's/,.*//')
 }
@@ -34,7 +39,12 @@ mcd() {
 }
 
 __code_base_dir() {
-  local base="$DJBELL_BASE/code"
+  local base="$DJBELL_BASE"
+  if [[ -n "$proj" ]] || [[ ! -d "$DJBELL_BASE/code" && ! -d /code ]] ; then
+    base="$base/Developer"
+  else
+    base="$base/code"
+  fi
   if [ ! -d $base ] ; then
     base="/code"
     if [ ! -d $base ] ; then
@@ -47,16 +57,30 @@ __code_base_dir() {
 
 goco() {
 
-  local base="$(__code_base_dir)"
-  if [[ -z "$base" ]] 
+  local proj="${DEV_PROJECT:-genesis}"
+  local fuzz="${1:-}"
+  if [[ -n "${2:-}" ]] ; then
+    proj="$fuzz"
+    fuzz="$2"
+  fi
+  local base="$(__code_base_dir "$proj")"
+  if [[ -z "$base" ]]
   then
-    echo "No $DJBELL_BASE/code or /code directory found"
+    echo "No $DJBELL_BASE/Developer, $DJBELL_BASE/code or /code directory found"
     return 1
   fi
+  if [[ -d "$base/$proj" ]] ; then
+    base="$base/$proj"
+  elif [[ -d "$base/clients/$proj" ]] ; then
+    base="$base/clients/$proj"
+  fi
 
-  local match="$(echo $1 | fold -w1 | paste -sd' ' - | sed -e 's/ /.*/g')"
+  echo >&2 "Looking under $base..."
+
+  local match="$(echo "$fuzz" | fold -w1 | paste -sd' ' - | sed -e 's/ /.*/g')"
 
   local dir="$(find $base -type d | \
+    cut  -c$(( $(realpath $base | wc -c) +1))- | \
     grep -v '/.git\(/\|$\)' | \
     grep "$match" | \
     awk '{ a=$0; gsub(/[^\/]/,"",$0); print length, length(a), a}' |\
@@ -65,7 +89,7 @@ goco() {
     head -n1)"
 
   if [[ -n "$dir" ]] ; then
-    cd $dir
+    cd $base/$dir
     [[ -f $DJBELL_BASE/bin/label ]] && label "[$(pwd | sed -E 's|.*/code/(src/)?[^/]*/([^/]*)/([^/]*).*|\2/\3|')@$(hostname)]"
     return 0
   else
@@ -76,41 +100,34 @@ goco() {
 
 gogit() {
 
-  local base="$(__code_base_dir)"
-  if [[ -z "$base" ]] 
-  then
-    echo "No $DJBELL_BASE/code or /code directory found"
-    return 1
-  fi
-  [[ -d ${base}/src ]] && base="${base}/src"
-
+  local proj
   local host
   local org
   local repo
 
   # If we're in the code path
-  path_info="$(pwd | sed -E 's|.*/code/(src/)?(([^/]+)(/([^/]+)(/([^/]+))?))?|\3 \5 \7|')"
+  path_info="$( perl -mCwd -e 'Cwd::cwd =~ m#.*/(?:code(?:/src)?|Developer(?:/((?:clients/)?(?:[^\./]*)))?)/(?:([^/]+)(?:/([^/]+)(?:/([^/]+))?)?)?#; printf(qq(%s|%s|%s|%s\n), $1, $2, $3, $4)')"
+
   echo $path_info
-  if [[ "$path_info" != "$(pwd)" ]] 
-  then
-    read host org repo <<< $path_info
-    echo "Host: $host ; Org: $org ; Repo: $repo"
-    if [[ $host == 'src' ]]
-    then
+  if [[ "$path_info" != "$(pwd)" ]] ; then
+    IFS="|" read -r proj host org repo  <<<"$path_info"
+    echo "Project: $proj ; Host: $host ; Org: $org ; Repo: $repo"
+    if [[ $host == 'src' ]]; then
       read host org  <<< "$org $repo "
       repo=''
     fi
   fi
 
   # Check the args for replacements
-  if [[ "${#@}" -gt "3" ]]
-  then
-    echo "Too many arguments: Expecting 0-3 arguments [[[host] org] repo] -- got $@"
+  if [[ "${#@}" -gt "4" ]] ; then
+    echo "Too many arguments: Expecting 0-3 arguments [[[[project] host] org] repo] -- got $@"
     return 1
   fi
 
   # Replace components with args given
-  case ${#@} in 
+  case ${#@} in
+    4)
+      read proj host org repo <<<"$@" ;;
     3)
       read host org repo <<< "$@" ;;
     2)
@@ -120,7 +137,7 @@ gogit() {
   esac
 
   # Check we got it all
-  if [[ -z "$host" ]] 
+  if [[ -z "$host" ]]
   then
     host="github.com"
     echo "Host cannot be determined from path and was not provided - assuming github.com"
@@ -128,10 +145,23 @@ gogit() {
   then
     echo "Organization cannot be determined from path and was not provided"
     return 1
-  elif [[ -z "$repo" ]] 
+  elif [[ -z "$repo" ]]
   then
     echo "Repository cannot be determined from path and was not provided"
     return 1
+  fi
+
+  local base="$(__code_base_dir $proj)"
+  if [[ -z "$base" ]]
+  then
+    echo "No $DJBELL_BASE/Developer, $DJBELL_BASE/code or /code directory found"
+    return 1
+  fi
+  if [[ -n "$proj" ]] ; then
+    base="$base/$proj"
+    [[ -d "$base" ]] || mkdir -p "$base"
+  elif [[ -d ${base}/src ]] ; then
+    base="${base}/src"
   fi
 
   cd ${base}
@@ -141,7 +171,7 @@ gogit() {
 
   local host_connect
   if [[ -f "${base}/${host}/.host_connect" ]]
-  then 
+  then
     host_connect="$(cat "${base}/${host}/.host_connect")"
   else
     host_connect="git@${host}:"
@@ -176,7 +206,7 @@ then
   alias ccat='pygmentize -g -O style=colorful'
 fi
 
-if command bat --version 2>/dev/null ; then
+if command bat --version 2>/dev/null 1>&2; then
   alias cat="bat"
 fi
 
@@ -201,16 +231,17 @@ alias gaa="git add ."
 alias gc="git commit --verbose -p"
 
 # Git Checkout
-alias gcom="git checkout master"
+alias gcom="git checkout main"
+alias gcod="git checkout develop"
 alias gco="git checkout"
-alias gcob="git checkout master && git pull origin master && git checkout -b"
+alias gcob="git checkout main && git pull origin main && git checkout -b"
 
 # Git Rebase
-alias grim="git rebase -i origin/master"
+alias grim="git rebase -i origin/main"
 
 # Git pull
-alias gup="git pull origin master"
-alias gpu="git pull origin master"
+alias gup="git pull origin main"
+alias gpu="git pull origin main"
 
 # Git Log
 alias gl="git log"
@@ -226,7 +257,7 @@ alias gdiff="git diff"
 
 if [ ! -z "$BASH_VERSION" -a ! -z "$PS1" ] ; then
   # Git should I push?
-  alias push?="git cherry -v origin/master"
+  alias push?="git cherry -v origin/main"
 fi
 
 
@@ -238,6 +269,13 @@ alias gbr="git branch -r"
 # Git Fetch
 alias gfa="git fetch --all"
 alias grr='diffs="$(git status | grep "both modified:" | sed -e "s/.*both modified: *//")" vim $diffs && git add $diffs && git rebase --continue'
+alias gfab='git branch -r | grep -v "\\->" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | while read remote; do git branch --track "${remote#origin/}" "$remote"; done; git fetch --all'
+
+# Git Editor
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  export GIT_EDITOR='code -w'
+  export GIT_COMMIT_EDITOR='code -w'
+fi
 
 # Use vi mode
 #set -o vi
@@ -322,3 +360,135 @@ alias ppry="perl -Ilib -MPry -e 'pry;'"
 Files() {
   diff "$1" "$3"
 }
+
+sincelast() {
+  no_spec=( '.' )
+  summary_opt=''
+  color=always
+  echo "Options ($#):" "$@"
+  while (( $# > 0 )) ; do
+    case "$1" in
+      -x|--no-spec-results)
+        echo >&2 "Excluding any changes to spec/results..."
+        no_spec=( "--" "." ':!spec/results' )
+        ;;
+      -s|--summary)
+        echo >&2 "Only showing files that changes (not changes themselves)"
+        summary_opt='--name-only'
+        ;;
+      -n|--no-color)
+        color='never'
+        ;;
+      *)
+        echo >&2 "Unknown option $1: Expected -x|--no-spec-results, -s|--summary"
+        return 1
+        ;;
+    esac
+    shift
+  done
+
+  last_release="$(git hist | grep 'tag: v[0-9\.]*\(,[^)].*\)\?)'|head -n 1 | sed -e 's/.*\([0-9a-f]\{7\}\) - (tag.*/\1/')"
+  git -c color.ui="$color" log -p --reverse $summary_opt "${last_release}..." "${no_spec[@]}"
+}
+
+gci_cmp() {
+  local subpath="${1:-.}"
+  local sample="${2:-vault}"
+  if [[ ! -d "$sample-genesis-kit" ]] ; then
+    echo "[31;1mNo $sample-genesis-kit directory found[0m"
+    return 1
+  fi
+  for x in *-genesis-kit; do
+    if [[ "$x" == "$sample-genesis-kit" ]] ; then
+      continue
+    fi
+    echo "[33;1m$x[0m"
+    if [[ ! -f "$x/ci/$subpath" ]] ; then
+      echo "[31;1mNo $subpath in $x[0m"$'\n'
+      continue
+    fi
+    diff "$sample-genesis-kit/ci/$subpath" "$x/ci/$subpath"
+    if [[ "$?" -eq 0 ]] ; then
+      echo "[32;1mNo differences[0m"$'\n'
+    else
+      read -p "[33;1mReplace $x/ci/$subpath with $sample-genesis-kit/ci/$subpath? [yNqm][0m " -n 1 -r answer
+      echo
+
+      if [[ "$answer" == "y" ]] ; then
+        cp "$sample-genesis-kit/ci/$subpath" "$x/ci/$subpath"
+      fi
+      if [[ "$answer" == "q" ]] ; then
+        return 0
+      fi
+      if [[ "$answer" == "m" ]] ; then
+        mvim -g -f -d "$sample-genesis-kit/ci/$subpath" "$x/ci/$subpath"
+      fi
+    fi
+  done
+}
+
+# checkssl <host[:port] | url> [servername]
+# Print the leaf cert's subject, SANs, issuer, and validity window
+checkssl() {
+    local input="${1:?usage: checkssl <host[:port] | url> [servername]}"
+    input="${input#*://}"        # strip https:// or http:// if pasted
+    input="${input%%/*}"         # strip any /path
+    local host="${input%:*}"
+    local port="${input##*:}"
+    [[ "$port" == "$input" ]] && port=443
+    local sni="${2:-$host}"
+
+    openssl s_client -connect "$host:$port" -servername "$sni" </dev/null 2>/dev/null \
+        | openssl x509 -noout -subject -issuer -dates -ext subjectAltName
+}
+
+# checkssl-expires <host[:port] | url> [servername]
+# Same as checkssl, plus a one-line "Expires in N days"
+checkssl-expires() {
+    local end
+    end=$(checkssl "$@" | awk -F= '/notAfter=/ {print $2}')
+    [[ -z "$end" ]] && { echo >&2 "checkssl-expires: no cert returned"; return 1; }
+    printf '%s\nExpires in %d days\n' "$end" \
+        "$(( ($(date -j -f '%b %d %T %Y %Z' "$end" +%s) - $(date +%s)) / 86400 ))"
+}
+
+# =============================================================================
+# uv-managed Python
+# -----------------------------------------------------------------------------
+# uv installs versioned executables (python3.13, ...) here. Prepended so they
+# win over brew's python@3.x of the same minor -- brew's copies exist to serve
+# other formulae, not for development.
+#
+# This is only safe while uv is installed WITHOUT --default: uv then creates
+# versioned names only, so bare `python3` still falls through to brew. Adding
+# --default would claim `python`/`python3` here and shadow it.
+if [ -d "$HOME/.local/bin" ] ; then
+  case ":$PATH:" in
+    *":$HOME/.local/bin:"*) ;;
+    *) export PATH="$HOME/.local/bin:$PATH" ;;
+  esac
+fi
+
+# =============================================================================
+# Completions
+# -----------------------------------------------------------------------------
+# Sourced from the env repo's completions/ dir, linked to ~/.completions by
+# setup.sh. Drop a new *.bash in there and it gets picked up automatically.
+_comp_dir="$DJBELL_BASE/.completions"
+if [ -d "$_comp_dir" ] ; then
+  for _comp in "$_comp_dir"/*.bash ; do
+    [ -f "$_comp" ] || continue
+    case "${_comp##*/}" in
+      # Defer to the OS/brew bash-completion package if it already supplied
+      # git's completion -- theirs tracks the installed git version.
+      git-completion.bash)
+        type -t __git_complete >/dev/null 2>&1 && continue ;;
+      # Pointless without the binary, and it shells out to it on every tab.
+      fly_completion.bash)
+        command -v fly >/dev/null 2>&1 || continue ;;
+    esac
+    . "$_comp"
+  done
+  unset _comp
+fi
+unset _comp_dir

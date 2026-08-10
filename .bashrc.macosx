@@ -1,11 +1,12 @@
 # This should only be run by .bashrc on Mac OS X (darwin*) systems
 export CLICOLOR=1
-export ARCHFLAGS="-arch x86_64"
+#export ARCHFLAGS="-arch arm64"
 
 # Mac-only aliases
 alias preview="open -a Preview.app"
 alias vim='mvim -v'
-alias gvim='\mvim -p'
+#alias gvim='\mvim -p'
+alias gvim='neovide'
 
 # Utility Functions
 netpid() {
@@ -20,4 +21,5 @@ dict() {
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # Brew bash_completion
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+eval "$(/opt/homebrew/bin/brew shellenv)"
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
