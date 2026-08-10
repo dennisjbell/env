@@ -113,6 +113,23 @@ brew "redis"
 brew "postgresql@15"
 brew "mysql"
 
+# --- Fonts -------------------------------------------------------------------
+# Referenced by tracked config, so they are real dependencies, not decoration:
+#   vimfiles/.gvimrc:3    guifont=RobotoMonoForPowerline-Light  (PostScript name,
+#                         Light face -- shipped by the for-powerline cask)
+# and by VS Code / iTerm profiles, which are not tracked here.
+#
+# A missing guifont does not error; gvim silently falls back to a default.
+#
+# Beware: powerline casks are named after the FILE, not the family they
+# declare. font-anonymice-powerline is what provides "Anonymous Pro for
+# Powerline" -- there is no font-anonymous-pro-for-powerline.
+cask "font-anonymous-pro"
+cask "font-anonymice-powerline"
+cask "font-roboto-mono-for-powerline"
+cask "font-roboto-mono-nerd-font"
+cask "font-poiret-one"
+
 # --- Casks -------------------------------------------------------------------
 cask "gcloud-cli"
 cask "macdown"
